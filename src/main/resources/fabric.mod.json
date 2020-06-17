@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "id": "coral",
+  "version": "${version}",
+
+  "name": "Coral",
+  "description": "Tools collection for Minecraft",
+  "authors": [
+    "UnknownBuild"
+  ],
+  "contact": {
+    "homepage": "https://github.com/UnknownBuild",
+    "sources": "https://github.com/UnknownBuild/Coral",
+    "issues": "https://github.com/UnknownBuild/Coral/issues"
+  },
+
+  "license": "MIT",
+  "icon": "assets/coral/icon.png",
+
+  "environment": "server",
+  "entrypoints": {
+    "server": [
+      "studio.xmatrix.minecraft.coral.CoralServer"
+    ]
+  },
+  "mixins": [
+    "coral.mixins.json"
+  ],
+
+  "depends": {
+    "fabricloader": ">=0.7.4",
+    "fabric": "*",
+    "minecraft": "1.16.x"
+  },
+  "suggests": {
+    "flamingo": "*"
+  }
+}
