@@ -7,7 +7,17 @@ import lombok.Data;
 public class Config {
 
     @JsonMerge
+    private Translation translation;
+
+    @JsonMerge
     private Function function;
+
+    @Data
+    public static class Translation {
+        private String region;
+        private String customLangFile;
+        private String customStyleFile;
+    }
 
     @Data
     public static class Function {

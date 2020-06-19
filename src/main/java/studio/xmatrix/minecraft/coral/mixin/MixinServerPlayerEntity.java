@@ -33,6 +33,7 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity {
         MutableText text = new LiteralText(this.getName().asString())
                 .formatted(Formatting.YELLOW)
                 .append(new LiteralText(" 喊你睡觉觉啦").formatted(Formatting.AQUA));
+        // MutableText text = TextUtil.byKey("msg.callSleep", this.getDisplayName());
         Objects.requireNonNull(minecraftServer).getPlayerManager().sendToAll(text);
     }
 }

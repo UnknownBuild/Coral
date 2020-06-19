@@ -1,2 +1,6 @@
+translation:
+  region: en_US
+  customLangFile:
+  customStyleFile:
 function:
   msgCallSleep: true
