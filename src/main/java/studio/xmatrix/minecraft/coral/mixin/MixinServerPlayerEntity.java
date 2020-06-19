@@ -4,9 +4,7 @@ import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.MutableText;
-import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
@@ -14,6 +12,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import studio.xmatrix.minecraft.coral.config.ConfigLoader;
+import studio.xmatrix.minecraft.coral.util.TextUtil;
 
 import java.util.Objects;
 
@@ -30,10 +29,7 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity {
             return;
         }
         MinecraftServer minecraftServer = this.getServer();
-        MutableText text = new LiteralText(this.getName().asString())
-                .formatted(Formatting.YELLOW)
-                .append(new LiteralText(" 喊你睡觉觉啦").formatted(Formatting.AQUA));
-        // MutableText text = TextUtil.byKey("msg.callSleep", this.getDisplayName());
+        MutableText text = TextUtil.byKey("msg.callSleep", this.getDisplayName());
         Objects.requireNonNull(minecraftServer).getPlayerManager().sendToAll(text);
     }
 }

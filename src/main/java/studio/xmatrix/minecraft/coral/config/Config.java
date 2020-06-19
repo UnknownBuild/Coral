@@ -10,6 +10,9 @@ public class Config {
     private Translation translation;
 
     @JsonMerge
+    private Command command;
+
+    @JsonMerge
     private Function function;
 
     @Data
@@ -17,6 +20,21 @@ public class Config {
         private String region;
         private String customLangFile;
         private String customStyleFile;
+    }
+
+    @Data
+    public static class Command {
+
+        @JsonMerge
+        private Here here;
+
+        private Boolean wru;
+
+        @Data
+        public static class Here {
+            private Boolean enabled;
+            private String duration;
+        }
     }
 
     @Data

@@ -30,7 +30,7 @@ public class StyleLoader {
         if (style == null) {
             style = loadConfig();
         }
-        return Formatting.byName(key);
+        return Formatting.byName(style.get(key));
     }
 
     private static Map<String, String> loadConfig() {

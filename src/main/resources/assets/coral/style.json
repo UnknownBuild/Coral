@@ -1,4 +1,13 @@
 {
   "msg.callSleep": "aqua",
-  "msg.callSleep.$1": "yellow"
+  "msg.callSleep.$1": "yellow",
+  "msg.iAmHere.$1": "yellow",
+  "msg.iAmHere.$2.end": "dark_purple",
+  "msg.iAmHere.$2.nether": "dark_red",
+  "msg.iAmHere.$2.overWorld": "dark_green",
+  "msg.iAmHere.$3": "dark_aqua",
+  "msg.whereAreYou.$1": "yellow",
+  "msg.whereAreYou.$2": "dark_aqua",
+  "feedback.playerGlowing": "gray",
+  "feedback.playerGlowing.$1": "gray"
 }

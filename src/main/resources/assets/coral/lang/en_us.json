@@ -1,3 +1,9 @@
 {
-  "msg.callSleep": "%1$s call you to sleep"
+  "env.dimension.end": "End",
+  "env.dimension.nether": "Nether",
+  "env.dimension.overWorld":  "OverWorld",
+  "feedback.playerGlowing": "You will be highlighted for %1$s seconds",
+  "msg.callSleep": "%1$s calls you to sleep",
+  "msg.iAmHere": "%1$s says hello in the %2$s %3$s",
+  "msg.whereAreYou": "%1$s is asking %2$s 's location"
 }

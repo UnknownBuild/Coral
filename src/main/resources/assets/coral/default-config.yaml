@@ -2,5 +2,10 @@ translation:
   region: en_US
   customLangFile:
   customStyleFile:
+command:
+  here:
+    enabled: true
+    duration: 30s
+  wru: true
 function:
   msgCallSleep: true

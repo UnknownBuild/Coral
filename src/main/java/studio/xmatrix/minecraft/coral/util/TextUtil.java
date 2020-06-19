@@ -3,7 +3,9 @@ package studio.xmatrix.minecraft.coral.util;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import studio.xmatrix.minecraft.coral.config.LangLoader;
+import studio.xmatrix.minecraft.coral.config.StyleLoader;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -22,7 +24,12 @@ public class TextUtil {
             matchEnd = matcher.end();
 
             if (matchStart > start) {
-                text.append(value.substring(start, matchStart));
+                Formatting formatting = getFormatting(key, -1);
+                if (formatting == null) {
+                    text.append(value.substring(start, matchStart));
+                } else {
+                    text.append(new LiteralText(value.substring(start, matchStart)).formatted(formatting));
+                }
             }
 
             String matchString = value.substring(matchStart, matchEnd);
@@ -35,20 +42,53 @@ public class TextUtil {
                 String numString = matcher.group(1);
                 int num = numString != null ? Integer.parseInt(numString) - 1 : i++;
                 if (num < args.length) {
-                    text.append(convertArgToText(args[num]));
+                    Formatting formatting = getFormatting(key, num);
+                    if (formatting == null) {
+                        text.append(convertArgToText(args[num]));
+                    } else {
+                        text.append(convertArgToText(args[num]).formatted(formatting));
+                    }
                 }
             }
         }
 
         if (start < value.length()) {
-            text.append(value.substring(start));
+            Formatting formatting = getFormatting(key, -1);
+            if (formatting == null) {
+                text.append(value.substring(start));
+            } else {
+                text.append(new LiteralText(value.substring(start)).formatted(formatting));
+            }
         }
         return text;
     }
 
-    private static Text convertArgToText(Object obj) {
+    public static MutableText byKeyAndStyle(String key, String styleKey) {
+        String value = LangLoader.getValue(key);
+        Formatting formatting = StyleLoader.getValue(styleKey);
+        if (formatting == null || formatting.equals(Formatting.WHITE)) {
+            return new LiteralText(value);
+        } else {
+            return new LiteralText(value).formatted(formatting);
+        }
+    }
+
+    private static Formatting getFormatting(String key, int index) {
+        Formatting formatting;
+        if (index == -1) {
+            formatting = StyleLoader.getValue(key);
+        } else {
+            formatting = StyleLoader.getValue(String.format("%s.$%d", key, index + 1));
+        }
+        if (Formatting.WHITE.equals(formatting)) {
+            return null;
+        }
+        return formatting;
+    }
+
+    private static LiteralText convertArgToText(Object obj) {
         if (obj instanceof Text) {
-            return (Text) obj;
+            return (LiteralText) obj;
         } else if (obj == null) {
             return new LiteralText("null");
         } else {
