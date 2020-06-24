@@ -5,10 +5,13 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
+import net.minecraft.network.MessageType;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.*;
+import net.minecraft.util.Util;
+import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.dimension.DimensionType;
 import studio.xmatrix.minecraft.coral.config.ConfigLoader;
 import studio.xmatrix.minecraft.coral.util.TextUtil;
@@ -20,16 +23,16 @@ import static net.minecraft.server.command.CommandManager.literal;
 
 public class HereCommand {
 
-    private static final Map<DimensionType, MutableText> dimensionTexts = new HashMap<>();
+    private static final Map<RegistryKey<DimensionType>, MutableText> dimensionTexts = new HashMap<>();
 
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
         if (!ConfigLoader.getConfig().getCommand().getHere().getEnabled()) {
             return;
         }
 
-        dimensionTexts.put(DimensionType.OVERWORLD, TextUtil.byKeyAndStyle("env.dimension.overWorld", "msg.iAmHere.$2.overWorld"));
-        dimensionTexts.put(DimensionType.THE_NETHER, TextUtil.byKeyAndStyle("env.dimension.nether", "msg.iAmHere.$2.nether"));
-        dimensionTexts.put(DimensionType.THE_END, TextUtil.byKeyAndStyle("env.dimension.end", "msg.iAmHere.$2.end"));
+        dimensionTexts.put(DimensionType.OVERWORLD_REGISTRY_KEY, TextUtil.byKeyAndStyle("env.dimension.overWorld", "msg.iAmHere.$2.overWorld"));
+        dimensionTexts.put(DimensionType.THE_NETHER_REGISTRY_KEY, TextUtil.byKeyAndStyle("env.dimension.nether", "msg.iAmHere.$2.nether"));
+        dimensionTexts.put(DimensionType.THE_END_REGISTRY_KEY, TextUtil.byKeyAndStyle("env.dimension.end", "msg.iAmHere.$2.end"));
 
         LiteralArgumentBuilder<ServerCommandSource> literalArgumentBuilder = literal("here")
                 .executes(hereBuilder());
@@ -47,8 +50,8 @@ public class HereCommand {
                     .styled(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND,
                             String.format("/tp @s %d %d %d", player.getBlockPos().getX(), player.getBlockPos().getY(), player.getBlockPos().getZ())))
                             .setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TranslatableText("chat.coordinates.tooltip"))));
-            MutableText text = TextUtil.byKey("msg.iAmHere", player.getDisplayName(), dimensionTexts.get(player.dimension), coordinateText);
-            minecraftServer.getPlayerManager().sendToAll(text);
+            MutableText text = TextUtil.byKey("msg.iAmHere", player.getDisplayName(), dimensionTexts.get(player.world.getDimensionRegistryKey()), coordinateText);
+            minecraftServer.getPlayerManager().broadcastChatMessage(text, MessageType.SYSTEM, Util.NIL_UUID);
             source.sendFeedback(TextUtil.byKey("feedback.playerGlowing", 30), false);
             return Command.SINGLE_SUCCESS;
         };
