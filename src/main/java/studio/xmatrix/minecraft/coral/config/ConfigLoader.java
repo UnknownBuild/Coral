@@ -1,6 +1,9 @@
 package studio.xmatrix.minecraft.coral.config;
 
 import org.apache.logging.log4j.Logger;
+import studio.xmatrix.minecraft.coral.config.entity.Config;
+import studio.xmatrix.minecraft.coral.config.validate.IValidator;
+import studio.xmatrix.minecraft.coral.config.validate.ValidatorException;
 import studio.xmatrix.minecraft.coral.util.FileUtil;
 import studio.xmatrix.minecraft.coral.util.LogUtil;
 
@@ -21,12 +24,14 @@ public class ConfigLoader {
     private static Config config;
 
     public static void init() {
-        getConfig();
+        IValidator validator = getConfig();
+        try {
+            validator.validate();
+        } catch (ValidatorException e) {
+            LOGGER.fatal("ConfigLoader init failed", e);
+            throw new RuntimeException(e);
+        }
         LOGGER.info("ConfigLoader init finish");
-        LOGGER.info("Config function.msgCallSleep: {}", config.getFunction().getMsgCallSleep());
-        LOGGER.info("Config translation.customLangFile: {}", config.getTranslation().getCustomLangFile());
-        LOGGER.info("Config translation.customStyleFile: {}", config.getTranslation().getCustomStyleFile());
-        LOGGER.info("Config translation.region: {}", config.getTranslation().getRegion());
     }
 
     public static Config getConfig() {

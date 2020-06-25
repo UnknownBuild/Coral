@@ -24,7 +24,7 @@ Coral模组的工作依赖于fabric和fabric-api。
 
 | Minecraft版本 |      Coral最新版本       |
 | :-----------: | :----------------------: |
-|     1.16      | v0-beta(暂未提供Release) |
+|   1.16.x   | [1.16-v0.1.0](https://github.com/UnknownBuild/Coral/releases/download/v0.x/coral-1.16-v0.1.0+200625.jar) |
 
 Coral通过配置文件来开启或关闭功能，关于Coral的配置请阅读[Coral配置指南](docs/config_zh.md)。
 

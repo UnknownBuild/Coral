@@ -1,6 +1,11 @@
 {
   "msg.callSleep": "aqua",
   "msg.callSleep.$1": "yellow",
+  "msg.deathInfo.$1": "yellow",
+  "msg.deathInfo.$2.end": "dark_purple",
+  "msg.deathInfo.$2.nether": "dark_red",
+  "msg.deathInfo.$2.overWorld": "dark_green",
+  "msg.deathInfo.$3": "dark_aqua",
   "msg.iAmHere.$1": "yellow",
   "msg.iAmHere.$2.end": "dark_purple",
   "msg.iAmHere.$2.nether": "dark_red",

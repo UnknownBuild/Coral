@@ -22,9 +22,9 @@ Please follow [https://fabricmc.net/use/](https://fabricmc.net/use/) for install
 
 The following is the latest version of Coral for each Minecraft version.
 
-| Minecraft Version |           Coral Latest Version           |
-| :---------------: | :--------------------------------------: |
-|       1.16        | v0-beta(Not Provide Release Temporarily) |
+| Minecraft Version |                     Coral Latest Version                     |
+| :---------------: | :----------------------------------------------------------: |
+|      1.16.x       | [1.16-v0.1.0](https://github.com/UnknownBuild/Coral/releases/download/v0.x/coral-1.16-v0.1.0+200625.jar) |
 
 Coral uses configuration file to turn on or turn off these functions. Please read [Coral Configuration Guide](docs/config_zh.md) for Coral's usage.
 

@@ -9,3 +9,4 @@ command:
   wru: true
 function:
   msgCallSleep: true
+  msgDeathInfo: true

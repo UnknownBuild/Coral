@@ -44,15 +44,17 @@ public class HereCommand {
             ServerCommandSource source = c.getSource();
             MinecraftServer minecraftServer = source.getMinecraftServer();
             ServerPlayerEntity player = source.getPlayer();
-            player.addStatusEffect(new StatusEffectInstance(StatusEffects.GLOWING, 30 * 20));
+            int duration = ConfigLoader.getConfig().getCommand().getHere().getDuration();
+            player.addStatusEffect(new StatusEffectInstance(StatusEffects.GLOWING, duration * 20));
 
             MutableText coordinateText = new LiteralText(String.format("[x%d, y:%d, z:%d]", player.getBlockPos().getX(), player.getBlockPos().getY(), player.getBlockPos().getZ()))
                     .styled(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND,
-                            String.format("/tp @s %d %d %d", player.getBlockPos().getX(), player.getBlockPos().getY(), player.getBlockPos().getZ())))
+                            String.format("/execute in %s run tp @s %d %d %d", player.world.getDimensionRegistryKey().getValue().toString(),
+                                    player.getBlockPos().getX(), player.getBlockPos().getY(), player.getBlockPos().getZ())))
                             .setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TranslatableText("chat.coordinates.tooltip"))));
             MutableText text = TextUtil.byKey("msg.iAmHere", player.getDisplayName(), dimensionTexts.get(player.world.getDimensionRegistryKey()), coordinateText);
             minecraftServer.getPlayerManager().broadcastChatMessage(text, MessageType.SYSTEM, Util.NIL_UUID);
-            source.sendFeedback(TextUtil.byKey("feedback.playerGlowing", 30), false);
+            source.sendFeedback(TextUtil.byKey("feedback.playerGlowing", duration), false);
             return Command.SINGLE_SUCCESS;
         };
     }

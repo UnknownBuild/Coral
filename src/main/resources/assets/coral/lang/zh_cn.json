@@ -4,6 +4,7 @@
   "env.dimension.overWorld": "主世界",
   "feedback.playerGlowing": "您将会被高亮%1$s秒",
   "msg.callSleep": "%1$s 喊你睡觉啦",
+  "msg.deathInfo": "%1$s 的盒子在 %2$s %3$s",
   "msg.iAmHere": "%1$s 在 %2$s %3$s 向大家打招呼",
   "msg.whereAreYou": "%1$s 在询问 %2$s 的位置"
 }

@@ -81,3 +81,12 @@ function:
   msgCallSleep: true  # 是否启用该功能
 ```
 
+### msgDeathInfo
+
+* 功能：在玩家死亡时，向世界广播死亡地址。
+* 配置：
+
+```yaml
+function:
+  msgDeathInfo: true  # 是否启用该功能
+```
