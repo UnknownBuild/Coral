@@ -22,6 +22,11 @@ dependencies {
 
     // Others
     implementation "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:${project.jackson_version}"
+    include "com.fasterxml.jackson.core:jackson-core:${project.jackson_version}"
+    include "com.fasterxml.jackson.core:jackson-annotations:${project.jackson_version}"
+    include "com.fasterxml.jackson.core:jackson-databind:${project.jackson_version}"
+    include "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:${project.jackson_version}"
+    include 'org.yaml:snakeyaml:1.26'
 }
 
 processResources {
