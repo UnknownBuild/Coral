@@ -10,3 +10,6 @@ command:
 function:
   msgCallSleep: true
   msgDeathInfo: true
+  msgMotd:
+    enabled: false
+    text:

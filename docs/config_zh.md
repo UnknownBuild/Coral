@@ -90,3 +90,15 @@ function:
 function:
   msgDeathInfo: true  # 是否启用该功能
 ```
+
+### msgMotd
+
+* 功能：在玩家加入游戏时，向玩家发送加入消息
+* 配置：
+
+```yaml
+function:
+  msgMotd:
+    enabled: true  # 是否启用该功能
+    text: 欢迎游玩§e我的世界§r！  # 消息内容
+```

@@ -13,6 +13,7 @@ Coral为生存游戏提供了很多有趣的工具与扩展。
 * 喊你睡觉：躺在床上的玩家会广播睡觉消息提醒其他玩家及时睡觉。
 * 死亡信息：玩家死亡时广播死亡地址。
 * 高亮玩家：高亮玩家自己，并广播坐标。
+* 欢迎消息：玩家加入游戏时收到系统消息。
 
 ## 安装与使用
 
@@ -26,7 +27,7 @@ Coral模组的工作依赖于fabric和fabric-api。
 
 | Minecraft版本 |      Coral最新版本       |
 | :-----------: | :----------------------: |
-|   1.16.x   | [1.16-v0.1.1](https://github.com/UnknownBuild/Coral/releases/download/v0.x/coral-1.16-v0.1.1+200629.jar)、[1.16.1-v0.1.1](https://github.com/UnknownBuild/Coral/releases/download/v0.x/coral-1.16.1-v0.1.1+200629.jar) |
+|   1.16.x   | [1.16-v0.1.1](https://github.com/UnknownBuild/Coral/releases/download/v0.x/coral-1.16-v0.1.1+200629.jar)、[1.16.1-v0.1.2](https://github.com/UnknownBuild/Coral/releases/download/v0.x/coral-1.16.1-v0.1.2+200724.jar) |
 
 Coral通过配置文件来开启或关闭功能，关于Coral的配置请阅读[Coral配置指南](docs/config_zh.md)。
 
