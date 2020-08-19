@@ -25,10 +25,10 @@ import java.util.Objects;
 @Mixin(ServerPlayerEntity.class)
 public abstract class MixinServerPlayerEntity extends PlayerEntity {
 
-    private static Map<RegistryKey<DimensionType>, MutableText> dimensionTexts;
+    private static Map<RegistryKey<World>, MutableText> dimensionTexts;
 
-    private MixinServerPlayerEntity(World world, BlockPos blockPos, GameProfile gameProfile) {
-        super(world, blockPos, gameProfile);
+    private MixinServerPlayerEntity(World world, BlockPos blockPos, float yaw, GameProfile gameProfile) {
+        super(world, blockPos, yaw, gameProfile);
     }
 
     @Inject(method = "onDeath", at = @At(value = "RETURN"))
@@ -40,10 +40,10 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity {
 
         MutableText coordinateText = new LiteralText(String.format("[x%d, y:%d, z:%d]", this.getBlockPos().getX(), this.getBlockPos().getY(), this.getBlockPos().getZ()))
                 .styled(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND,
-                        String.format("/execute in %s run tp @s %d %d %d", this.world.getDimensionRegistryKey().getValue().toString(),
+                        String.format("/execute in %s run tp @s %d %d %d", this.world.getRegistryKey().getValue().toString(),
                                 this.getBlockPos().getX(), this.getBlockPos().getY(), this.getBlockPos().getZ())))
-                        .setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TranslatableText("chat.coordinates.tooltip"))));
-        MutableText text = TextUtil.byKey("msg.deathInfo", this.getDisplayName(), getDimensionText(this.world.getDimensionRegistryKey()), coordinateText);
+                        .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TranslatableText("chat.coordinates.tooltip"))));
+        MutableText text = TextUtil.byKey("msg.deathInfo", this.getDisplayName(), getDimensionText(this.world.getRegistryKey()), coordinateText);
         Objects.requireNonNull(minecraftServer).getPlayerManager().broadcastChatMessage(text, MessageType.SYSTEM, Util.NIL_UUID);
     }
 
@@ -57,12 +57,12 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity {
         Objects.requireNonNull(minecraftServer).getPlayerManager().broadcastChatMessage(text, MessageType.SYSTEM, Util.NIL_UUID);
     }
 
-    private MutableText getDimensionText(RegistryKey<DimensionType> key) {
+    private MutableText getDimensionText(RegistryKey<World> key) {
         if (dimensionTexts == null) {
             dimensionTexts = new HashMap<>();
-            dimensionTexts.put(DimensionType.OVERWORLD_REGISTRY_KEY, TextUtil.byKeyAndStyle("env.dimension.overWorld", "msg.deathInfo.$2.overWorld"));
-            dimensionTexts.put(DimensionType.THE_NETHER_REGISTRY_KEY, TextUtil.byKeyAndStyle("env.dimension.nether", "msg.deathInfo.$2.nether"));
-            dimensionTexts.put(DimensionType.THE_END_REGISTRY_KEY, TextUtil.byKeyAndStyle("env.dimension.end", "msg.deathInfo.$2.end"));
+            dimensionTexts.put(World.OVERWORLD, TextUtil.byKeyAndStyle("env.dimension.overWorld", "msg.deathInfo.$2.overWorld"));
+            dimensionTexts.put(World.NETHER, TextUtil.byKeyAndStyle("env.dimension.nether", "msg.deathInfo.$2.nether"));
+            dimensionTexts.put(World.END, TextUtil.byKeyAndStyle("env.dimension.end", "msg.deathInfo.$2.end"));
         }
         return dimensionTexts.get(key);
     }

@@ -12,6 +12,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.*;
 import net.minecraft.util.Util;
 import net.minecraft.util.registry.RegistryKey;
+import net.minecraft.world.World;
 import net.minecraft.world.dimension.DimensionType;
 import studio.xmatrix.minecraft.coral.config.ConfigLoader;
 import studio.xmatrix.minecraft.coral.util.TextUtil;
@@ -23,16 +24,16 @@ import static net.minecraft.server.command.CommandManager.literal;
 
 public class HereCommand {
 
-    private static final Map<RegistryKey<DimensionType>, MutableText> dimensionTexts = new HashMap<>();
+    private static final Map<RegistryKey<World>, MutableText> dimensionTexts = new HashMap<>();
 
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
         if (!ConfigLoader.getConfig().getCommand().getHere().getEnabled()) {
             return;
         }
 
-        dimensionTexts.put(DimensionType.OVERWORLD_REGISTRY_KEY, TextUtil.byKeyAndStyle("env.dimension.overWorld", "msg.iAmHere.$2.overWorld"));
-        dimensionTexts.put(DimensionType.THE_NETHER_REGISTRY_KEY, TextUtil.byKeyAndStyle("env.dimension.nether", "msg.iAmHere.$2.nether"));
-        dimensionTexts.put(DimensionType.THE_END_REGISTRY_KEY, TextUtil.byKeyAndStyle("env.dimension.end", "msg.iAmHere.$2.end"));
+        dimensionTexts.put(World.OVERWORLD, TextUtil.byKeyAndStyle("env.dimension.overWorld", "msg.iAmHere.$2.overWorld"));
+        dimensionTexts.put(World.NETHER, TextUtil.byKeyAndStyle("env.dimension.nether", "msg.iAmHere.$2.nether"));
+        dimensionTexts.put(World.END, TextUtil.byKeyAndStyle("env.dimension.end", "msg.iAmHere.$2.end"));
 
         LiteralArgumentBuilder<ServerCommandSource> literalArgumentBuilder = literal("here")
                 .executes(hereBuilder());
@@ -49,10 +50,10 @@ public class HereCommand {
 
             MutableText coordinateText = new LiteralText(String.format("[x%d, y:%d, z:%d]", player.getBlockPos().getX(), player.getBlockPos().getY(), player.getBlockPos().getZ()))
                     .styled(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND,
-                            String.format("/execute in %s run tp @s %d %d %d", player.world.getDimensionRegistryKey().getValue().toString(),
+                            String.format("/execute in %s run tp @s %d %d %d", player.world.getRegistryKey().getValue().toString(),
                                     player.getBlockPos().getX(), player.getBlockPos().getY(), player.getBlockPos().getZ())))
-                            .setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TranslatableText("chat.coordinates.tooltip"))));
-            MutableText text = TextUtil.byKey("msg.iAmHere", player.getDisplayName(), dimensionTexts.get(player.world.getDimensionRegistryKey()), coordinateText);
+                            .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TranslatableText("chat.coordinates.tooltip"))));
+            MutableText text = TextUtil.byKey("msg.iAmHere", player.getDisplayName(), dimensionTexts.get(player.world.getRegistryKey()), coordinateText);
             minecraftServer.getPlayerManager().broadcastChatMessage(text, MessageType.SYSTEM, Util.NIL_UUID);
             source.sendFeedback(TextUtil.byKey("feedback.playerGlowing", duration), false);
             return Command.SINGLE_SUCCESS;
