@@ -1,7 +1,6 @@
 package studio.xmatrix.minecraft.coral.config;
 
 import org.apache.logging.log4j.Logger;
-import studio.xmatrix.minecraft.coral.config.entity.Config;
 import studio.xmatrix.minecraft.coral.config.validate.IValidator;
 import studio.xmatrix.minecraft.coral.config.validate.ValidatorException;
 import studio.xmatrix.minecraft.coral.util.FileUtil;
@@ -15,10 +14,9 @@ public class ConfigLoader {
 
     private static final Logger LOGGER = LogUtil.getLogger();
 
-    private static final String DEFAULT_CONFIG_FILE_PATH = "assets/coral/default-config.yaml";
+    private static final String DEFAULT_CONFIG_FILE_PATH = "assets/coral/default-config.json";
     private static final String[] CUSTOM_CONFIG_FILE_PATHS = new String[]{
-            "configs/coral.yaml",
-            "configs/coral.yml"
+            "configs/coral.json"
     };
 
     private static Config config;
@@ -45,7 +43,7 @@ public class ConfigLoader {
         // Load default config from resource, crash when load fail
         Config defaultConfig;
         try {
-            defaultConfig = FileUtil.fromYamlResource(DEFAULT_CONFIG_FILE_PATH, Config.class);
+            defaultConfig = FileUtil.fromJsonResource(DEFAULT_CONFIG_FILE_PATH, Config.class);
         } catch (IOException e) {
             throw new RuntimeException("Load default config fail", e);
         }
@@ -57,7 +55,7 @@ public class ConfigLoader {
             return defaultConfig;
         } else {
             try {
-                return FileUtil.fromYaml(file, Config.class, defaultConfig);
+                return FileUtil.fromJson(file, Config.class, defaultConfig);
             } catch (IOException e) {
                 LOGGER.error("Load config fail, now use default config, file:{}, err:{}", file.getAbsolutePath(), e.getMessage());
                 return defaultConfig;

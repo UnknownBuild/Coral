@@ -1,6 +1,6 @@
 package studio.xmatrix.minecraft.coral.config;
 
-import com.fasterxml.jackson.core.type.TypeReference;
+import com.google.gson.reflect.TypeToken;
 import net.minecraft.util.Formatting;
 import org.apache.logging.log4j.Logger;
 import studio.xmatrix.minecraft.coral.util.FileUtil;
@@ -8,6 +8,7 @@ import studio.xmatrix.minecraft.coral.util.LogUtil;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,14 +35,14 @@ public class StyleLoader {
     }
 
     private static Map<String, String> loadConfig() {
-        String customStyleFileName = ConfigLoader.getConfig().getTranslation().getCustomStyleFile();
-        TypeReference<HashMap<String, String>> typeRef = new TypeReference<HashMap<String, String>>() {
-        };
+        String customStyleFileName = ConfigLoader.getConfig().getTranslationCustomStyleFile();
+        Type type = new TypeToken<HashMap<String, String>>() {
+        }.getType();
 
         // Load default config from resource, crash when load fail
         Map<String, String> defaultStyle;
         try {
-            defaultStyle = FileUtil.fromJsonResource(DEFAULT_STYLE_FILE_PATH, typeRef);
+            defaultStyle = FileUtil.fromJsonResource(DEFAULT_STYLE_FILE_PATH, type);
         } catch (IOException e) {
             throw new RuntimeException("Load default style config fail", e);
         }
@@ -53,7 +54,7 @@ public class StyleLoader {
         File file = new File(customStyleFileName);
         Map<String, String> customStyle;
         try {
-            customStyle = FileUtil.fromJson(file, typeRef);
+            customStyle = FileUtil.fromJson(file, type);
             customStyle.forEach((k, v) -> {
                 if (defaultStyle.containsKey(k)) {
                     defaultStyle.put(k, v);

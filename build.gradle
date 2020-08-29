@@ -8,7 +8,7 @@ sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
 archivesBaseName = project.archives_base_name
-version = "${project.minecraft_version}-v${project.mod_version}"
+version = "${project.minecraft_version}-v${project.mod_version}+${getDate()}"
 group = project.maven_group
 
 dependencies {
@@ -21,12 +21,6 @@ dependencies {
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
     // Others
-    implementation "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:${project.jackson_version}"
-    include "com.fasterxml.jackson.core:jackson-core:${project.jackson_version}"
-    include "com.fasterxml.jackson.core:jackson-annotations:${project.jackson_version}"
-    include "com.fasterxml.jackson.core:jackson-databind:${project.jackson_version}"
-    include "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:${project.jackson_version}"
-    include 'org.yaml:snakeyaml:1.26'
 }
 
 processResources {
@@ -80,4 +74,10 @@ publishing {
         // uncomment to publish to the local maven
         // mavenLocal()
     }
+}
+
+import java.text.SimpleDateFormat
+
+static def getDate() {
+    return new SimpleDateFormat("yyMMdd").format(new Date())
 }

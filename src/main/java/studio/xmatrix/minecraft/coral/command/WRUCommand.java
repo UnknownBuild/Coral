@@ -19,7 +19,7 @@ import static net.minecraft.server.command.CommandManager.literal;
 public class WRUCommand {
 
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
-        if (!ConfigLoader.getConfig().getCommand().getWru()) {
+        if (!ConfigLoader.getConfig().getCommandWru()) {
             return;
         }
         LiteralArgumentBuilder<ServerCommandSource> literalArgumentBuilder = literal("wru")

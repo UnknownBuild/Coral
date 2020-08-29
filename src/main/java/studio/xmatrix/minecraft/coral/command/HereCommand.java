@@ -27,7 +27,7 @@ public class HereCommand {
     private static final Map<RegistryKey<World>, MutableText> dimensionTexts = new HashMap<>();
 
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
-        if (!ConfigLoader.getConfig().getCommand().getHere().getEnabled()) {
+        if (!ConfigLoader.getConfig().getCommandHere()) {
             return;
         }
 
@@ -45,7 +45,7 @@ public class HereCommand {
             ServerCommandSource source = c.getSource();
             MinecraftServer minecraftServer = source.getMinecraftServer();
             ServerPlayerEntity player = source.getPlayer();
-            int duration = ConfigLoader.getConfig().getCommand().getHere().getDuration();
+            int duration = ConfigLoader.getConfig().getCommandHereDuration();
             player.addStatusEffect(new StatusEffectInstance(StatusEffects.GLOWING, duration * 20));
 
             MutableText coordinateText = new LiteralText(String.format("[x%d, y:%d, z:%d]", player.getBlockPos().getX(), player.getBlockPos().getY(), player.getBlockPos().getZ()))

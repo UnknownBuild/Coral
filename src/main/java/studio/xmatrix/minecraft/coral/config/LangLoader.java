@@ -1,11 +1,12 @@
 package studio.xmatrix.minecraft.coral.config;
 
-import com.fasterxml.jackson.core.type.TypeReference;
+import com.google.gson.reflect.TypeToken;
 import org.apache.logging.log4j.Logger;
 import studio.xmatrix.minecraft.coral.util.FileUtil;
 import studio.xmatrix.minecraft.coral.util.LogUtil;
 
 import java.io.*;
+import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,15 +33,15 @@ public class LangLoader {
     }
 
     private static Map<String, String> loadConfig() {
-        String region = ConfigLoader.getConfig().getTranslation().getRegion();
-        String customLangFileName = ConfigLoader.getConfig().getTranslation().getCustomLangFile();
-        TypeReference<HashMap<String, String>> typeRef = new TypeReference<HashMap<String, String>>() {
-        };
+        String region = ConfigLoader.getConfig().getTranslationRegion();
+        String customLangFileName = ConfigLoader.getConfig().getTranslationCustomLangFile();
+        Type type = new TypeToken<HashMap<String, String>>() {
+        }.getType();
 
         // Load default config from resource, crash when load fail
         Map<String, String> defaultLang;
         try {
-            defaultLang = FileUtil.fromJsonResource(String.format(DEFAULT_LANG_FILE_PATH, region.toLowerCase()), typeRef);
+            defaultLang = FileUtil.fromJsonResource(String.format(DEFAULT_LANG_FILE_PATH, region), type);
         } catch (IOException e) {
             throw new RuntimeException("Load default lang config fail", e);
         }
@@ -52,7 +53,7 @@ public class LangLoader {
         File file = new File(customLangFileName);
         Map<String, String> customLang;
         try {
-            customLang = FileUtil.fromJson(file, typeRef);
+            customLang = FileUtil.fromJson(file, type);
             customLang.forEach((k, v) -> {
                 if (defaultLang.containsKey(k)) {
                     defaultLang.put(k, v);

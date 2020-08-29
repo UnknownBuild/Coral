@@ -1,62 +1,65 @@
 package studio.xmatrix.minecraft.coral.util;
 
-import com.fasterxml.jackson.annotation.JsonSetter;
-import com.fasterxml.jackson.annotation.Nulls;
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectReader;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import com.google.gson.Gson;
+import org.apache.commons.lang3.reflect.FieldUtils;
+import org.apache.logging.log4j.Logger;
 
 import java.io.*;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.lang.reflect.Type;
 
 public class FileUtil {
 
-    public static <T> T fromJson(File file, TypeReference<T> valueTypeRef) throws IOException {
-        return loadResource(file, valueTypeRef, new JsonFactory());
+    private static final Logger LOGGER = LogUtil.getLogger();
+
+    public static <T> T fromJson(File file, Type valueType) throws IOException {
+        try (FileInputStream inputStream = new FileInputStream(file)) {
+            return loadJson(inputStream, valueType, null);
+        }
     }
 
-    public static <T> T fromJsonResource(String path, TypeReference<T> valueTypeRef) throws IOException {
-        return loadResource(path, valueTypeRef, new JsonFactory());
+    public static <T> T fromJson(File file, Type valueType, T defaultValue) throws IOException {
+        try (FileInputStream inputStream = new FileInputStream(file)) {
+            return loadJson(inputStream, valueType, defaultValue);
+        }
     }
 
-    public static <T> T fromYaml(File file, Class<T> valueType, T defaultValue) throws IOException {
-        return loadResource(file, valueType, new YAMLFactory(), defaultValue);
-    }
-
-    public static <T> T fromYamlResource(String path, Class<T> valueType) throws IOException {
-        return loadResource(path, valueType, new YAMLFactory());
-    }
-
-    private static <T> T loadResource(String path, Class<T> valueType, JsonFactory factory) throws IOException {
+    public static <T> T fromJsonResource(String path, Type valueType) throws IOException {
         ClassLoader classLoader = FileUtil.class.getClassLoader();
         try (InputStream inputStream = classLoader.getResourceAsStream(path)) {
-            ObjectMapper mapper = new ObjectMapper(factory);
-            return mapper.readValue(inputStream, valueType);
+            return loadJson(inputStream, valueType, null);
         }
     }
 
-    private static <T> T loadResource(String path, TypeReference<T> valueTypeRef, JsonFactory factory) throws IOException {
-        ClassLoader classLoader = FileUtil.class.getClassLoader();
-        try (InputStream inputStream = classLoader.getResourceAsStream(path)) {
-            ObjectMapper mapper = new ObjectMapper(factory);
-            return mapper.readValue(inputStream, valueTypeRef);
+    private static <T> T loadJson(InputStream inputStream, Type valueType, T defaultValue) throws IOException {
+        if (inputStream == null) {
+            throw new IOException("get null inputStream");
         }
+        Reader reader = new InputStreamReader(inputStream);
+        T value = new Gson().fromJson(reader, valueType);
+        if (defaultValue != null) {
+            simpleMergeObject(value, defaultValue);
+        }
+        reader.close();
+        return value;
     }
 
-    private static <T> T loadResource(File file, Class<T> valueType, JsonFactory factory, T defaultValue) throws IOException {
-        try (FileInputStream inputStream = new FileInputStream(file);) {
-            ObjectMapper mapper = new ObjectMapper(factory);
-            mapper.setDefaultSetterInfo(JsonSetter.Value.forValueNulls(Nulls.SKIP));
-            ObjectReader reader = mapper.readerForUpdating(defaultValue);
-            return reader.readValue(inputStream, valueType);
-        }
-    }
-
-    private static <T> T loadResource(File file, TypeReference<T> valueTypeRef, JsonFactory factory) throws IOException {
-        try (FileInputStream inputStream = new FileInputStream(file);) {
-            ObjectMapper mapper = new ObjectMapper(factory);
-            return mapper.readValue(inputStream, valueTypeRef);
+    private static <T> void simpleMergeObject(T mergeObject, T defaultObject) throws IOException {
+        try {
+            Field[] fields = mergeObject.getClass().getDeclaredFields();
+            for (Field field : fields) {
+                if (Modifier.isStatic(field.getModifiers())) {
+                    continue;
+                }
+                field.setAccessible(true);
+                if (field.get(mergeObject) == null) {
+                    field.set(mergeObject, field.get(defaultObject));
+                }
+            }
+        } catch (IllegalAccessException e) {
+            LOGGER.error("merge object fail, err:{}", e.getMessage());
+            throw new IOException("simple merge object fail", e);
         }
     }
 }

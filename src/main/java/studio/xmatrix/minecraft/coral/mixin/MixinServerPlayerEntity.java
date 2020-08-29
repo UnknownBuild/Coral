@@ -10,7 +10,6 @@ import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.World;
-import net.minecraft.world.dimension.DimensionType;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -33,7 +32,7 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity {
 
     @Inject(method = "onDeath", at = @At(value = "RETURN"))
     private void onDeath(CallbackInfo ci) {
-        if (!ConfigLoader.getConfig().getFunction().getMsgDeathInfo()) {
+        if (!ConfigLoader.getConfig().getFunctionMsgDeathInfo()) {
             return;
         }
         MinecraftServer minecraftServer = this.getServer();
@@ -49,7 +48,7 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity {
 
     @Inject(method = "sleep", at = @At(value = "RETURN"))
     private void sleep(CallbackInfo ci) {
-        if (!ConfigLoader.getConfig().getFunction().getMsgCallSleep()) {
+        if (!ConfigLoader.getConfig().getFunctionMsgCallSleep()) {
             return;
         }
         MinecraftServer minecraftServer = this.getServer();
