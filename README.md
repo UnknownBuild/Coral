@@ -29,7 +29,7 @@ The following is the latest version of Coral for each Minecraft version.
 
 | Minecraft Version |                     Coral Latest Version                     |
 | :---------------: | :----------------------------------------------------------: |
-|      1.16.x       | [v0.1.4](https://github.com/UnknownBuild/Coral/releases/tag/v0.x) |
+|      1.16.x       | [v0.1.5](https://github.com/UnknownBuild/Coral/releases/tag/v0.x) |
 
 Coral uses configuration file to turn on or turn off these functions. Please read [Coral Configuration Guide](docs/config_zh.md) for Coral's usage.
 
