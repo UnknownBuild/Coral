@@ -1,42 +1,41 @@
 # Fabric Coral
 
-Tools collection for Minecraft, fabric version.
+我的世界工具及扩展集合，fabric版本。
 
 ![coral](src/main/resources/assets/coral/icon.png)
 
-\[English\] [[中文]](README_ZH.md)
-
 ![Coral CI](https://github.com/UnknownBuild/Coral/workflows/Coral%20CI/badge.svg)
 
-## Functions
+## 功能
 
-Coral provides many interesting tools and extensions for survival game.
+Coral为生存游戏提供了很多有趣的工具与扩展。
 
-* Call You To Sleep: broadcast sleep request to remind other players when player lying in bed.
-* Death Information: broadcast the death address when player died.
-* Highlight Player: highlight player and broadcast address.
-* Message Of The Day: send system message when player join in game.
+* 喊你睡觉：躺在床上的玩家会广播睡觉消息提醒其他玩家及时睡觉。
+* 死亡信息：玩家死亡时广播死亡地址。
+* 高亮玩家：高亮玩家自己，并广播坐标。
+* 欢迎消息：玩家加入游戏时收到系统消息。
 
-## Installation and Usage
+## 安装与使用
 
-Coral Mod depends on fabric and fabric-api.
+Coral模组的工作依赖于fabric和fabric-api。
 
-Please follow [https://fabricmc.net/use/](https://fabricmc.net/use/) for installing fabric, and download [fabric-api](https://www.curseforge.com/minecraft/mc-mods/fabric-api) and [Coral](https://github.com/UnknownBuild/Coral/releases) in folder `mods`  for specific Minecraft version.
+请阅读 [https://fabricmc.net/use/](https://fabricmc.net/use/) 安装好fabric，然后下载对应Minecraft版本的 [fabric-api](https://www.curseforge.com/minecraft/mc-mods/fabric-api) 和 [Coral](https://github.com/UnknownBuild/Coral/releases) 到`mods`文件夹。
 
-The following is the latest version of Coral for each Minecraft version.
+以下为各个Minecraft版本的Coral最新版本。
 
-> **Note: `v0.x` is beta version. All functions are experimental, which may be modified or removed.**
+> **注意：`v0.x`为测试版本，所有功能均为实验性功能，可能修改或移除。**
 
-| Minecraft Version |                     Coral Latest Version                     |
-| :---------------: | :----------------------------------------------------------: |
-|      1.16.x       | [v0.1.5](https://github.com/UnknownBuild/Coral/releases/tag/v0.x) |
+| Minecraft版本 |      Coral最新版本       |
+| :-----------: | :----------------------: |
+|   1.17.x   | [v0.1.6](https://github.com/UnknownBuild/Coral/releases/tag/v0.x) |
+|   1.16.x   | [v0.1.5](https://github.com/UnknownBuild/Coral/releases/tag/v0.x) |
 
-Coral uses configuration file to turn on or turn off these functions. Please read [Coral Configuration Guide](docs/config_zh.md) for Coral's usage.
+Coral通过配置文件来开启或关闭功能，关于Coral的配置请阅读 [Coral配置指南](docs/config_zh.md) 。
 
-## Issues and Suggestions
+## 问题与建议
 
-If you have any issues, feedbacks, suggestions or feature requests for Coral, please go to [Issues](https://github.com/UnknownBuild/Coral/issues) to submit relevant content.
+如果您对于Coral有任何问题反馈、建议或特性请求，请通过 [Issues](https://github.com/UnknownBuild/Coral/issues) 提交相关内容。
 
-## License
+## 许可协议
 
-Coral Mod opens sources based on [MIT License](https://github.com/UnknownBuild/Coral/blob/master/LICENSE).
+Coral模组基于 [MIT License](https://github.com/UnknownBuild/Coral/blob/master/LICENSE) 开放源码。
