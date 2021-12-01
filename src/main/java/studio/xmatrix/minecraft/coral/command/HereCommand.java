@@ -13,7 +13,6 @@ import net.minecraft.text.*;
 import net.minecraft.util.Util;
 import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.World;
-import net.minecraft.world.dimension.DimensionType;
 import studio.xmatrix.minecraft.coral.config.ConfigLoader;
 import studio.xmatrix.minecraft.coral.util.TextUtil;
 
@@ -43,7 +42,7 @@ public class HereCommand {
     private static Command<ServerCommandSource> hereBuilder() {
         return c -> {
             ServerCommandSource source = c.getSource();
-            MinecraftServer minecraftServer = source.getMinecraftServer();
+            MinecraftServer minecraftServer = source.getServer();
             ServerPlayerEntity player = source.getPlayer();
             int duration = ConfigLoader.getConfig().getCommandHereDuration();
             player.addStatusEffect(new StatusEffectInstance(StatusEffects.GLOWING, duration * 20));
@@ -54,7 +53,7 @@ public class HereCommand {
                                     player.getBlockPos().getX(), player.getBlockPos().getY(), player.getBlockPos().getZ())))
                             .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TranslatableText("chat.coordinates.tooltip"))));
             MutableText text = TextUtil.byKey("msg.iAmHere", player.getDisplayName(), dimensionTexts.get(player.world.getRegistryKey()), coordinateText);
-            minecraftServer.getPlayerManager().broadcastChatMessage(text, MessageType.SYSTEM, Util.NIL_UUID);
+            minecraftServer.getPlayerManager().broadcast(text, MessageType.SYSTEM, Util.NIL_UUID);
             source.sendFeedback(TextUtil.byKey("feedback.playerGlowing", duration), false);
             return Command.SINGLE_SUCCESS;
         };

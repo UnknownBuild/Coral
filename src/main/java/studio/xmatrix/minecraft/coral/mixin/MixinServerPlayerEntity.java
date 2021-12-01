@@ -43,7 +43,7 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity {
                                 this.getBlockPos().getX(), this.getBlockPos().getY(), this.getBlockPos().getZ())))
                         .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TranslatableText("chat.coordinates.tooltip"))));
         MutableText text = TextUtil.byKey("msg.deathInfo", this.getDisplayName(), getDimensionText(this.world.getRegistryKey()), coordinateText);
-        Objects.requireNonNull(minecraftServer).getPlayerManager().broadcastChatMessage(text, MessageType.SYSTEM, Util.NIL_UUID);
+        Objects.requireNonNull(minecraftServer).getPlayerManager().broadcast(text, MessageType.SYSTEM, Util.NIL_UUID);
     }
 
     @Inject(method = "sleep", at = @At(value = "RETURN"))
@@ -53,7 +53,7 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity {
         }
         MinecraftServer minecraftServer = this.getServer();
         MutableText text = TextUtil.byKey("msg.callSleep", this.getDisplayName());
-        Objects.requireNonNull(minecraftServer).getPlayerManager().broadcastChatMessage(text, MessageType.SYSTEM, Util.NIL_UUID);
+        Objects.requireNonNull(minecraftServer).getPlayerManager().broadcast(text, MessageType.SYSTEM, Util.NIL_UUID);
     }
 
     private MutableText getDimensionText(RegistryKey<World> key) {

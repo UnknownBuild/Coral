@@ -31,12 +31,12 @@ public class WRUCommand {
     private static Command<ServerCommandSource> askPlayerBuilder() {
         return c -> {
             ServerCommandSource source = c.getSource();
-            MinecraftServer minecraftServer = source.getMinecraftServer();
+            MinecraftServer minecraftServer = source.getServer();
             ServerPlayerEntity player = source.getPlayer();
             ServerPlayerEntity argumentPlayer = EntityArgumentType.getPlayer(c, "player");
 
             MutableText text = TextUtil.byKey("msg.whereAreYou", player.getDisplayName(), argumentPlayer.getDisplayName());
-            minecraftServer.getPlayerManager().broadcastChatMessage(text, MessageType.SYSTEM, Util.NIL_UUID);
+            minecraftServer.getPlayerManager().broadcast(text, MessageType.SYSTEM, Util.NIL_UUID);
             return Command.SINGLE_SUCCESS;
         };
     }
