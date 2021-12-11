@@ -10,6 +10,6 @@ public class LogUtil {
 
     public static Logger getLogger() {
         String className = StackLocatorUtil.getCallerClass(2).getSimpleName();
-        return LogManager.getLogger(String.format("<%s>|%s", MOD_NAME, className));
+        return LogManager.getLogger(String.format("%s/%s", MOD_NAME, className));
     }
 }
