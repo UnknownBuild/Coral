@@ -5,12 +5,10 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.network.MessageType;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.*;
-import net.minecraft.util.Util;
 import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.World;
 import studio.xmatrix.minecraft.coral.config.ConfigLoader;
@@ -44,16 +42,19 @@ public class HereCommand {
             ServerCommandSource source = c.getSource();
             MinecraftServer minecraftServer = source.getServer();
             ServerPlayerEntity player = source.getPlayer();
+            if (player == null) {
+                return Command.SINGLE_SUCCESS;
+            }
             int duration = ConfigLoader.getConfig().getCommandHereDuration();
             player.addStatusEffect(new StatusEffectInstance(StatusEffects.GLOWING, duration * 20));
 
-            MutableText coordinateText = new LiteralText(String.format("[x%d, y:%d, z:%d]", player.getBlockPos().getX(), player.getBlockPos().getY(), player.getBlockPos().getZ()))
+            MutableText coordinateText = Text.literal(String.format("[x%d, y:%d, z:%d]", player.getBlockPos().getX(), player.getBlockPos().getY(), player.getBlockPos().getZ()))
                     .styled(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND,
                             String.format("/execute in %s run tp @s %d %d %d", player.world.getRegistryKey().getValue().toString(),
                                     player.getBlockPos().getX(), player.getBlockPos().getY(), player.getBlockPos().getZ())))
-                            .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TranslatableText("chat.coordinates.tooltip"))));
+                            .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.translatable("chat.coordinates.tooltip"))));
             MutableText text = TextUtil.byKey("msg.iAmHere", player.getDisplayName(), dimensionTexts.get(player.world.getRegistryKey()), coordinateText);
-            minecraftServer.getPlayerManager().broadcast(text, MessageType.SYSTEM, Util.NIL_UUID);
+            minecraftServer.getPlayerManager().broadcast(text, false);
             source.sendFeedback(TextUtil.byKey("feedback.playerGlowing", duration), false);
             return Command.SINGLE_SUCCESS;
         };

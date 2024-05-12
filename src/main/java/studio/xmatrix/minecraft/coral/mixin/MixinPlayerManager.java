@@ -3,7 +3,7 @@ package studio.xmatrix.minecraft.coral.mixin;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.server.PlayerManager;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
 import net.minecraft.util.Util;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -21,6 +21,6 @@ public abstract class MixinPlayerManager {
         if (!config.getFunctionMsgMotd()) {
             return;
         }
-        player.sendSystemMessage(new LiteralText(config.getFunctionMsgMotdText()), Util.NIL_UUID);
+        player.sendMessage(Text.literal(config.getFunctionMsgMotdText()));
     }
 }

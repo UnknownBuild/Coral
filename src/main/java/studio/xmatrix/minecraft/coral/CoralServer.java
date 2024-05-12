@@ -1,7 +1,7 @@
 package studio.xmatrix.minecraft.coral;
 
 import net.fabricmc.api.DedicatedServerModInitializer;
-import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import org.apache.logging.log4j.Logger;
 import studio.xmatrix.minecraft.coral.command.HereCommand;
 import studio.xmatrix.minecraft.coral.command.WRUCommand;
@@ -25,11 +25,7 @@ public class CoralServer implements DedicatedServerModInitializer {
     }
 
     private void registerCommands() {
-        CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> {
-            if (!dedicated) { // Unreachable
-                LOGGER.error("Here can only be used on dedicated server, but now on an integrated server!");
-                return;
-            }
+        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
             HereCommand.register(dispatcher);
             WRUCommand.register(dispatcher);
         });

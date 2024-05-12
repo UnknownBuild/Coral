@@ -1,6 +1,5 @@
 package studio.xmatrix.minecraft.coral.util;
 
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -15,7 +14,7 @@ public class TextUtil {
     private static final Pattern ARG_FORMAT = Pattern.compile("%(?:(\\d+)\\$)?([A-Za-z%]|$)");
 
     public static MutableText byKey(String key, Object... args) {
-        MutableText text = new LiteralText("");
+        MutableText text = Text.literal("");
         String value = LangLoader.getValue(key);
         Matcher matcher = ARG_FORMAT.matcher(value);
         int start = 0, matchEnd;
@@ -28,7 +27,7 @@ public class TextUtil {
                 if (formatting == null) {
                     text.append(value.substring(start, matchStart));
                 } else {
-                    text.append(new LiteralText(value.substring(start, matchStart)).formatted(formatting));
+                    text.append(Text.literal(value.substring(start, matchStart)).formatted(formatting));
                 }
             }
 
@@ -57,7 +56,7 @@ public class TextUtil {
             if (formatting == null) {
                 text.append(value.substring(start));
             } else {
-                text.append(new LiteralText(value.substring(start)).formatted(formatting));
+                text.append(Text.literal(value.substring(start)).formatted(formatting));
             }
         }
         return text;
@@ -67,9 +66,9 @@ public class TextUtil {
         String value = LangLoader.getValue(key);
         Formatting formatting = StyleLoader.getValue(styleKey);
         if (formatting == null || formatting.equals(Formatting.WHITE)) {
-            return new LiteralText(value);
+            return Text.literal(value);
         } else {
-            return new LiteralText(value).formatted(formatting);
+            return Text.literal(value).formatted(formatting);
         }
     }
 
@@ -86,13 +85,13 @@ public class TextUtil {
         return formatting;
     }
 
-    private static LiteralText convertArgToText(Object obj) {
+    private static MutableText convertArgToText(Object obj) {
         if (obj instanceof Text) {
-            return (LiteralText) obj;
+            return (MutableText) obj;
         } else if (obj == null) {
-            return new LiteralText("null");
+            return Text.literal("null");
         } else {
-            return new LiteralText(obj.toString());
+            return Text.literal(obj.toString());
         }
     }
 }

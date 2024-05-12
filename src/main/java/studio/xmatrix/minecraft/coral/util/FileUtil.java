@@ -8,6 +8,7 @@ import java.io.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
+import java.nio.charset.StandardCharsets;
 
 public class FileUtil {
 
@@ -36,7 +37,7 @@ public class FileUtil {
         if (inputStream == null) {
             throw new IOException("get null inputStream");
         }
-        Reader reader = new InputStreamReader(inputStream);
+        Reader reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
         T value = new Gson().fromJson(reader, valueType);
         if (defaultValue != null) {
             simpleMergeObject(value, defaultValue);
