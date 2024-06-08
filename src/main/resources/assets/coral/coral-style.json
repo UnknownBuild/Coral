@@ -1,0 +1,15 @@
+{
+  "coral.command.here.$1": "yellow",
+  "coral.command.here.$3": "dark_aqua",
+  "coral.command.here.feedback": "gray",
+  "coral.command.here.feedback.$1": "gray",
+  "coral.command.wru.$1": "yellow",
+  "coral.command.wru.$2": "dark_aqua",
+  "coral.dimension.end": "dark_purple",
+  "coral.dimension.nether": "dark_red",
+  "coral.dimension.over_world": "dark_green",
+  "coral.feature.call_sleep": "aqua",
+  "coral.feature.call_sleep.$1": "yellow",
+  "coral.feature.death_info.$1": "yellow",
+  "coral.feature.death_info.$3": "dark_aqua"
+}

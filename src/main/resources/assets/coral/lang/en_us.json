@@ -1,10 +1,11 @@
 {
-  "env.dimension.end": "End",
-  "env.dimension.nether": "Nether",
-  "env.dimension.overWorld":  "OverWorld",
-  "feedback.playerGlowing": "You will be highlighted for %1$s seconds",
-  "msg.callSleep": "%1$s calls you to sleep",
-  "msg.deathInfo": "%1$s died in %2$s %3$s",
-  "msg.iAmHere": "%1$s says hello in the %2$s %3$s",
-  "msg.whereAreYou": "%1$s is asking %2$s 's location"
+  "coral.command.here": "%1$s says hello in the %2$s %3$s",
+  "coral.command.here.feedback": "You will be highlighted for %1$s seconds",
+  "coral.command.wru": "%1$s is asking %2$s's location",
+  "coral.command.wru.err_self": "cannot ask yourself",
+  "coral.dimension.end": "End",
+  "coral.dimension.nether": "Nether",
+  "coral.dimension.over_world":  "OverWorld",
+  "coral.feature.call_sleep": "%1$s calls you to sleep",
+  "coral.feature.death_info": "%1$s died in %2$s %3$s"
 }

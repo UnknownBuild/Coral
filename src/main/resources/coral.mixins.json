@@ -2,13 +2,14 @@
   "required": true,
   "package": "studio.xmatrix.minecraft.coral.mixin",
   "compatibilityLevel": "JAVA_21",
+  "plugin": "studio.xmatrix.minecraft.coral.mixin.CoralMixinPlugin",
   "mixins": [
+    "MixinFeatureCallSleep",
+    "MixinFeatureDeathInfo"
   ],
   "client": [
   ],
   "server": [
-    "MixinPlayerManager",
-    "MixinServerPlayerEntity"
   ],
   "injectors": {
     "defaultRequire": 1

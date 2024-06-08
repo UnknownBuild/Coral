@@ -1,66 +1,35 @@
 package studio.xmatrix.minecraft.coral.util;
 
 import com.google.gson.Gson;
-import org.apache.commons.lang3.reflect.FieldUtils;
-import org.apache.logging.log4j.Logger;
 
 import java.io.*;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 
+/**
+ * 文件相关的工具
+ */
 public class FileUtil {
-
-    private static final Logger LOGGER = LogUtil.getLogger();
-
-    public static <T> T fromJson(File file, Type valueType) throws IOException {
+    public static <T> T get(String path, Type valueType) throws IOException {
+        var file = new File(path);
         try (FileInputStream inputStream = new FileInputStream(file)) {
-            return loadJson(inputStream, valueType, null);
+            return loadJson(inputStream, valueType);
         }
     }
 
-    public static <T> T fromJson(File file, Type valueType, T defaultValue) throws IOException {
-        try (FileInputStream inputStream = new FileInputStream(file)) {
-            return loadJson(inputStream, valueType, defaultValue);
-        }
+    public static <T> T getResource(String path, Type valueType) throws IOException {
+        var file = FileUtil.class.getResourceAsStream(path);
+        return loadJson(file, valueType);
     }
 
-    public static <T> T fromJsonResource(String path, Type valueType) throws IOException {
-        ClassLoader classLoader = FileUtil.class.getClassLoader();
-        try (InputStream inputStream = classLoader.getResourceAsStream(path)) {
-            return loadJson(inputStream, valueType, null);
-        }
+    public static InputStream getResourceAsStream(String path) {
+        return FileUtil.class.getResourceAsStream(path);
     }
 
-    private static <T> T loadJson(InputStream inputStream, Type valueType, T defaultValue) throws IOException {
-        if (inputStream == null) {
-            throw new IOException("get null inputStream");
-        }
+    private static <T> T loadJson(InputStream inputStream, Type valueType) throws IOException {
         Reader reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
         T value = new Gson().fromJson(reader, valueType);
-        if (defaultValue != null) {
-            simpleMergeObject(value, defaultValue);
-        }
         reader.close();
         return value;
-    }
-
-    private static <T> void simpleMergeObject(T mergeObject, T defaultObject) throws IOException {
-        try {
-            Field[] fields = mergeObject.getClass().getDeclaredFields();
-            for (Field field : fields) {
-                if (Modifier.isStatic(field.getModifiers())) {
-                    continue;
-                }
-                field.setAccessible(true);
-                if (field.get(mergeObject) == null) {
-                    field.set(mergeObject, field.get(defaultObject));
-                }
-            }
-        } catch (IllegalAccessException e) {
-            LOGGER.error("merge object fail, err:{}", e.getMessage());
-            throw new IOException("simple merge object fail", e);
-        }
     }
 }

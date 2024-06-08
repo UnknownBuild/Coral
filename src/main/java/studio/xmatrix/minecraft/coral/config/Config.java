@@ -1,75 +1,131 @@
 package studio.xmatrix.minecraft.coral.config;
 
-import com.google.gson.annotations.SerializedName;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import studio.xmatrix.minecraft.coral.config.validate.IValidator;
-import studio.xmatrix.minecraft.coral.config.validate.Validator;
-import studio.xmatrix.minecraft.coral.config.validate.ValidatorException;
+import org.apache.logging.log4j.Logger;
+import studio.xmatrix.minecraft.coral.util.FileUtil;
+import studio.xmatrix.minecraft.coral.util.LogUtil;
 
-@Data
-@AllArgsConstructor
-public class Config implements IValidator {
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.InvalidPropertiesFormatException;
+import java.util.Properties;
 
-    private static final String[] REGIONS = {"en_US", "zh_CN"};
+/**
+ * Coral 配置加载和获取
+ */
+public class Config {
+    private static final Logger LOGGER = LogUtil.getLogger();
+    private static final String DEFAULT_CONFIG_FILE_PATH = "/assets/coral/coral-config-%s.properties";
+    private static final String[] CUSTOM_CONFIG_FILE_PATHS = new String[]{
+            "coral.properties",
+            "config/coral.properties",
+            "configs/coral.properties"
+    };
+    private static Properties globalProperties;
+    private static RuntimeException initException;
 
-    @SerializedName("command.here")
-    private Boolean commandHere;
-    @SerializedName("command.here.duration")
-    private String commandHereDuration;
-
-    @SerializedName("command.wru")
-    private Boolean commandWru;
-
-    @SerializedName("function.msgCallSleep")
-    private Boolean functionMsgCallSleep;
-
-    @SerializedName("function.msgDeathInfo")
-    private Boolean functionMsgDeathInfo;
-
-    @SerializedName("function.msgMotd")
-    private Boolean functionMsgMotd;
-    @SerializedName("function.msgMotd.text")
-    private String functionMsgMotdText;
-
-    @SerializedName("translation.customLangFile")
-    private String translationCustomLangFile;
-    @SerializedName("translation.customStyleFile")
-    private String translationCustomStyleFile;
-    @SerializedName("translation.region")
-    private String translationRegion;
-
-    @Override
-    public void validate() throws ValidatorException {
-        Validator.notNull("command.here", commandHere);
-        Validator.notNull("command.here.duration", commandHereDuration);
-        Validator.match("command.here.duration", commandHereDuration, "(\\d+m)?\\d+s");
-        Validator.notNull("command.wru", commandWru);
-
-        Validator.notNull("function.msgCallSleep", functionMsgCallSleep);
-        Validator.notNull("function.msgDeathInfo", functionMsgDeathInfo);
-        Validator.notNull("function.msgMotd", functionMsgMotd);;
-        Validator.notNull("function.msgMotd.text", functionMsgMotdText);
-
-        Validator.notNull("translation.customLangFile", translationCustomLangFile);
-        Validator.notNull("translation.customStyleFile", translationCustomStyleFile);
-        Validator.notNull("translation.region", translationRegion);
-        Validator.in("translation.region", translationRegion, REGIONS);
+    private Config() {
     }
 
-    public int getCommandHereDuration() {
-        int result = 0;
-        int index = commandHereDuration.indexOf('m');
-        if (index != -1) {
-            result += 60 * Integer.parseInt(commandHereDuration.substring(0, index));
-            result += Integer.parseInt(commandHereDuration.substring(index + 1, commandHereDuration.length() - 1));
-        } else {
-            result += Integer.parseInt(commandHereDuration.substring(0, commandHereDuration.length() - 1));
+    /**
+     * 初始化 Coral 配置
+     */
+    public static void init() {
+        if (initException != null) {
+            throw initException;
         }
-        return result;
+
+        // 检查用户自定义配置是否存在
+        File customFile = null;
+        for (var path : CUSTOM_CONFIG_FILE_PATHS) {
+            var file = new File(path);
+            if (file.exists() && file.isFile()) {
+                if (customFile == null) {
+                    customFile = file;
+                } else {
+                    throw new IllegalArgumentException(String.format("Duplicated config files of '%s' and '%s'", customFile.getPath(), file.getPath()));
+                }
+            }
+        }
+        // 加载自定义配置
+        Properties customProperties = new Properties();
+        if (customFile != null) {
+            try (var fileStream = new FileInputStream(customFile)) {
+                customProperties.load(fileStream);
+            } catch (IOException e) {
+                throw new IllegalArgumentException(String.format("Failed to read Coral custom config '%s'", customFile.getPath()), e);
+            }
+        }
+
+        // 获取默认配置
+        String defaultPath = String.format(DEFAULT_CONFIG_FILE_PATH, customProperties.getProperty("use", "default"));
+        Properties defaultProperties = new Properties();
+        try (var defaultStream = FileUtil.getResourceAsStream(defaultPath)) {
+            if (defaultStream == null) {
+                throw new IllegalStateException(String.format("Failed to read Coral default config: file %s not exist", defaultPath));
+            }
+            defaultProperties.load(defaultStream);
+            defaultProperties.forEach((key, val) -> customProperties.computeIfAbsent(key, k -> val));
+        } catch (IOException e) {
+            throw new IllegalStateException("Failed to read Coral default config", e);
+        }
+
+        // 处理和校验配置, 校验合法性
+        try {
+            validate(customProperties);
+        } catch (InvalidPropertiesFormatException e) {
+            throw new IllegalStateException("Failed to validate Coral config", e);
+        }
+
+        globalProperties = customProperties;
+        if (customFile != null) {
+            LOGGER.info("Init Coral config success, use custom config '{}'", customFile.getPath());
+        } else {
+            LOGGER.info("Init Coral config success, use default config");
+        }
     }
 
-    public String getTranslationRegion() {
-        return translationRegion.toLowerCase();
+    public static void setInitException(RuntimeException e) {
+        initException = e;
+    }
+
+    public static boolean getBoolean(String key) {
+        return (boolean) globalProperties.get(key);
+    }
+
+    public static int getInt(String key) {
+        return (int) globalProperties.get(key);
+    }
+
+    public static String getString(String key) {
+        return globalProperties.getProperty(key);
+    }
+
+    private static void validate(Properties properties) throws InvalidPropertiesFormatException {
+        tryBoolean(properties, "command.here");
+        tryInteger(properties, "command.here.duration");
+        tryBoolean(properties, "command.wru");
+
+        tryBoolean(properties, "feature.call_sleep");
+        tryBoolean(properties, "feature.death_info");
+    }
+
+    private static void tryBoolean(Properties properties, String key) throws InvalidPropertiesFormatException {
+        String value = properties.getProperty(key);
+        if (value != null && !value.equals("true") && !value.equals("false")) {
+            throw new InvalidPropertiesFormatException(String.format("Config %s should be true or false, but got %s", key, value));
+        }
+        boolean result = value != null && value.equals("true");
+        properties.put(key, result);
+    }
+
+    private static void tryInteger(Properties properties, String key) throws InvalidPropertiesFormatException {
+        String value = properties.getProperty(key);
+        try {
+            int result = Integer.parseInt(value);
+            properties.put(key, result);
+        } catch (NumberFormatException e) {
+            throw new InvalidPropertiesFormatException(String.format("Config %s should be a number, but got %s", key, value));
+        }
     }
 }
