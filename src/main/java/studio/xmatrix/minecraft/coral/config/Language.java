@@ -28,7 +28,7 @@ public class Language {
         var type = new TypeToken<HashMap<String, String>>() {
         }.getType();
         try {
-            lang = FileUtil.getResource(String.format(DEFAULT_LANG_FILE_PATH, code), type);
+            lang = FileUtil.fromResource(String.format(DEFAULT_LANG_FILE_PATH, code), type);
         } catch (IOException e) {
             throw new IllegalStateException("Failed to read Coral default language config", e);
         }
@@ -37,7 +37,7 @@ public class Language {
         String customPath = Config.getString("language.path");
         if (customPath != null && !customPath.isEmpty()) {
             try {
-                Map<String, String> customLang = FileUtil.get(customPath, type);
+                Map<String, String> customLang = FileUtil.fromPath(customPath, type);
                 lang.putAll(customLang);
             } catch (IOException e) {
                 throw new IllegalArgumentException(String.format("Failed to read Coral language config '%s'", customPath), e);

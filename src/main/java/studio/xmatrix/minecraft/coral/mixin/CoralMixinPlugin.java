@@ -38,23 +38,12 @@ public class CoralMixinPlugin implements IMixinConfigPlugin {
         }
 
         // 将 Mixin 转换成配置项
-        StringBuilder builder = new StringBuilder(mixinClassName.length() - MIXIN_PACKAGE.length());
-        var firstWord = true;
-        for (int i = MIXIN_PACKAGE.length() + "Mixin".length(); i < mixinClassName.length(); i++) {
-            char c = mixinClassName.charAt(i);
-            if (Character.isUpperCase(c)) {
-                if (!builder.isEmpty()) {
-                    builder.append(firstWord ? '.' : '_');
-                    firstWord = false;
-                }
-                builder.append(Character.toLowerCase(c));
-            } else {
-                builder.append(c);
-            }
-        }
+        int start = MIXIN_PACKAGE.length();
+        int end = mixinClassName.lastIndexOf('.');
+        String configName = mixinClassName.substring(start, end);
 
         // 判断功能是否启用
-        return Config.getBoolean(builder.toString());
+        return Config.getBoolean(configName);
     }
 
     @Override

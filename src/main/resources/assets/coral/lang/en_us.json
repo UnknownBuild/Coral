@@ -1,6 +1,8 @@
 {
   "coral.command.here": "%1$s says hello in the %2$s %3$s",
   "coral.command.here.feedback": "You will be highlighted for %1$s seconds",
+  "coral.command.player.list": "There are %1$s players online:\n%2$s",
+  "coral.command.player.listall": "There are total %1$s players in server:\n%2$s",
   "coral.command.wru": "%1$s is asking %2$s's location",
   "coral.command.wru.err_self": "cannot ask yourself",
   "coral.dimension.end": "End",

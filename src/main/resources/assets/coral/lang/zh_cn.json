@@ -1,6 +1,8 @@
 {
   "coral.command.here": "%1$s在%2$s%3$s向大家打招呼",
   "coral.command.here.feedback": "您将会被高亮%1$s秒",
+  "coral.command.player.list": "当前共有%1$s名玩家在线:\n%2$s",
+  "coral.command.player.listall": "服务器共有%1$s名玩家:\n%2$s",
   "coral.command.wru": "%1$s在询问%2$s的位置",
   "coral.command.wru.err_self": "不允许询问自己",
   "coral.dimension.end": "末地",

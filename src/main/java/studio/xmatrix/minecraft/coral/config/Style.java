@@ -24,7 +24,7 @@ public class Style {
         var type = new TypeToken<HashMap<String, String>>() {
         }.getType();
         try {
-            style = FileUtil.getResource(DEFAULT_STYLE_FILE_PATH, type);
+            style = FileUtil.fromResource(DEFAULT_STYLE_FILE_PATH, type);
         } catch (IOException e) {
             throw new IllegalStateException("Failed to read Coral default style config", e);
         }
@@ -33,7 +33,7 @@ public class Style {
         String customPath = Config.getString("style.path");
         if (customPath != null && !customPath.isEmpty()) {
             try {
-                Map<String, String> customStyle = FileUtil.get(customPath, type);
+                Map<String, String> customStyle = FileUtil.fromPath(customPath, type);
                 style.putAll(customStyle);
             } catch (IOException e) {
                 throw new IllegalArgumentException(String.format("Failed to read Coral style config '%s'", customPath), e);

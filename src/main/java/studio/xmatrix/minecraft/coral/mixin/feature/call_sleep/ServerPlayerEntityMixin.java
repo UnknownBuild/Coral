@@ -1,4 +1,4 @@
-package studio.xmatrix.minecraft.coral.mixin;
+package studio.xmatrix.minecraft.coral.mixin.feature.call_sleep;
 
 import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.player.PlayerEntity;
@@ -15,8 +15,8 @@ import studio.xmatrix.minecraft.coral.config.Language;
 import java.util.Objects;
 
 @Mixin(ServerPlayerEntity.class)
-public abstract class MixinFeatureCallSleep extends PlayerEntity {
-    private MixinFeatureCallSleep(World world, BlockPos blockPos, float yaw, GameProfile gameProfile) {
+public abstract class ServerPlayerEntityMixin extends PlayerEntity {
+    private ServerPlayerEntityMixin(World world, BlockPos blockPos, float yaw, GameProfile gameProfile) {
         super(world, blockPos, yaw, gameProfile);
     }
 

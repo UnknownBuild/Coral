@@ -104,6 +104,7 @@ public class Config {
     private static void validate(Properties properties) throws InvalidPropertiesFormatException {
         tryBoolean(properties, "command.here");
         tryInteger(properties, "command.here.duration");
+        tryBoolean(properties, "command.player");
         tryBoolean(properties, "command.wru");
 
         tryBoolean(properties, "feature.call_sleep");

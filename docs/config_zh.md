@@ -81,6 +81,10 @@ Coral 的预设样式文件在 [源码](https://github.com/UnknownBuild/Coral/tr
 
 我在这里。赋予玩家自身发光效果，并向世界聊天广播玩家的位置。
 
+```
+/here
+```
+
 该命令仅在专用服务器或单人游戏局域网模式下生效，不支持单人游戏。
 
 | 配置项 | 类型 | 默认值 | 说明        |
@@ -88,9 +92,28 @@ Coral 的预设样式文件在 [源码](https://github.com/UnknownBuild/Coral/tr
 | command.here | 布尔值 | true | 是否启用该命令   |
 | command.here.duration | 整型 | 30 | 发光效果时长(秒) |
 
+### player
+
+玩家命令增强。提供更丰富的查询功能。
+
+```
+/player list       # 列举当前在线玩家名单, 等同于 /list uuids, 但支持点击复制 uuid
+/player listall    # 列举服务器所有玩家名单, 部分玩家不会展示名称
+```
+
+listall 命令要求执行玩家拥有等级 3 及以上权限。
+
+| 配置项            | 类型 | 默认值 | 说明        |
+|----------------|--|--|--|
+| command.player | 布尔值 | true | 是否启用该命令   |
+
 ### wru
 
 你在哪里？询问玩家的位置。
+
+```
+/wru <player>
+```
 
 该命令仅在专用服务器或单人游戏局域网模式下生效，不支持单人游戏。
 

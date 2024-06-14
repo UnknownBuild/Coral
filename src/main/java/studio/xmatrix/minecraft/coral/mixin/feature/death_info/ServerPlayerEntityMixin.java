@@ -1,10 +1,9 @@
-package studio.xmatrix.minecraft.coral.mixin;
+package studio.xmatrix.minecraft.coral.mixin.feature.death_info;
 
-import com.mojang.authlib.GameProfile;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.MutableText;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -16,9 +15,9 @@ import studio.xmatrix.minecraft.coral.consts.Dimension;
 import java.util.Objects;
 
 @Mixin(ServerPlayerEntity.class)
-public abstract class MixinFeatureDeathInfo extends PlayerEntity {
-    private MixinFeatureDeathInfo(World world, BlockPos blockPos, float yaw, GameProfile gameProfile) {
-        super(world, blockPos, yaw, gameProfile);
+public abstract class ServerPlayerEntityMixin extends LivingEntity {
+    protected ServerPlayerEntityMixin(EntityType<? extends LivingEntity> entityType, World world) {
+        super(entityType, world);
     }
 
     @Inject(method = "onDeath", at = @At(value = "RETURN"))
