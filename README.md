@@ -1,6 +1,7 @@
 # Fabric Coral
 
-![Build](https://github.com/UnknownBuild/Coral/workflows/Build/badge.svg)
+[![GitHub Action](https://github.com/UnknownBuild/Coral/workflows/Build/badge.svg)](https://github.com/UnknownBuild/Coral/actions/workflows/main.yaml)
+[![GitHub Release](https://img.shields.io/github/v/release/UnknownBuild/Coral)](https://github.com/UnknownBuild/Coral/releases)
 
 Coral 是 我的世界(Minecraft) 的一个工具及扩展模组，目前仅提供 Fabric 版本。
 
