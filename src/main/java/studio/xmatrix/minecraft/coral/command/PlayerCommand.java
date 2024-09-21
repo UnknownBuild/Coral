@@ -1,5 +1,6 @@
 package studio.xmatrix.minecraft.coral.command;
 
+import com.mojang.authlib.GameProfile;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import net.minecraft.server.command.CommandManager;
@@ -7,22 +8,23 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.*;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.WorldSavePath;
-import org.apache.commons.lang3.tuple.Triple;
+import org.jetbrains.annotations.NotNull;
 import studio.xmatrix.minecraft.coral.config.Config;
 import studio.xmatrix.minecraft.coral.config.Language;
 import studio.xmatrix.minecraft.coral.mixin.command.player.MinecraftServerAccessor;
+import studio.xmatrix.minecraft.coral.store.CoralPlayerState;
 import studio.xmatrix.minecraft.coral.util.FileUtil;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.UUID;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * player 命令提供了玩家查询和转移的扩展
  */
 public class PlayerCommand {
+    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
         if (!Config.getBoolean("command.player")) {
             return;
@@ -34,71 +36,138 @@ public class PlayerCommand {
                 .then(CommandManager.literal("listall").requires(s -> s.hasPermissionLevel(3)).executes(c -> executeListAll(c.getSource()))));
     }
 
+    /**
+     * 展示当前在线玩家列表
+     */
     private static int executeList(ServerCommandSource source) {
         // 输出当前在线玩家列表
         var players = source.getServer().getPlayerManager().getPlayerList();
-        var playerText = Texts.join(players, Text.literal("\n"), p -> createPlayerText(p.getUuidAsString(), p.getGameProfile().getName(), 0));
+        var playerText = Texts.join(players, Text.literal("\n"), p ->
+                createPlayerText(new PlayerData(p.getUuid(), p.getGameProfile().getName(), true, 0, null), false));
+        if (!players.isEmpty()) {
+            playerText = Text.literal(":\n").append(playerText);
+        }
         var text = Language.formatStyle("coral.command.player.list", players.size(), playerText);
         source.sendFeedback(() -> text, false);
         return Command.SINGLE_SUCCESS;
     }
 
+    /**
+     * 展示所有玩家列表
+     */
     private static int executeListAll(ServerCommandSource source) {
-        var players = new ArrayList<Triple<String, String, Integer>>(); // uuid, name, level
-        var playerMap = new HashSet<String>();
+        var players = new ArrayList<PlayerData>();
+        var playerMap = new HashSet<UUID>();
         var opList = source.getServer().getPlayerManager().getOpList();
 
         // 获取服务器在线玩家列表
         for (var p : source.getServer().getPlayerManager().getPlayerList()) {
             var op = opList.get(p.getGameProfile());
             var opLevel = op != null ? op.getPermissionLevel() : 0;
-            players.add(Triple.of(p.getUuidAsString(), p.getGameProfile().getName(), opLevel));
-            playerMap.add(p.getUuidAsString());
+            players.add(new PlayerData(p.getUuid(), p.getGameProfile().getName(), true, opLevel, null));
+            playerMap.add(p.getUuid());
         }
 
-        // 获取服务器玩家数据文件夹下的玩家列表
+        // 获取本地存储的离线玩家列表
         var playerDataDir = ((MinecraftServerAccessor) source.getServer()).getSession().getDirectory(WorldSavePath.PLAYERDATA).toFile();
-        var userCache = Objects.requireNonNull(source.getServer().getUserCache());
+        var coralPlayers = CoralPlayerState.fromServer(source.getServer()).getPlayers();
         for (var file : Objects.requireNonNull(playerDataDir.listFiles(File::isFile))) {
             // 获取用户 uuid
-            var uuidStr = FileUtil.getPrefixName(file);
-            if (uuidStr.length() != 36 || playerMap.contains(uuidStr)) {
+            UUID uuid;
+            try {
+                uuid = UUID.fromString(FileUtil.getPrefixName(file));
+            } catch (IllegalArgumentException e) {
                 continue;
             }
-            playerMap.add(uuidStr);
-            var uuid = UUID.fromString(uuidStr);
-            // 获取用户名称和判断是否为管理员
-            String playerName = "";
-            int opLevel = 0;
-            var gameProfile = userCache.getByUuid(uuid);
-            if (gameProfile.isPresent()) {
-                playerName = gameProfile.get().getName();
-                var op = opList.get(gameProfile.get());
-                opLevel = op != null ? op.getPermissionLevel() : 0;
+            if (playerMap.contains(uuid)) {
+                continue;
             }
-            players.add(Triple.ofNonNull(uuidStr, playerName, opLevel));
+            playerMap.add(uuid);
+
+            // 获取用户信息
+            var op = opList.get(new GameProfile(uuid, ""));
+            var opLevel = op != null ? op.getPermissionLevel() : 0;
+            var coralPlayer = coralPlayers.get(uuid);
+            if (coralPlayer != null) {
+                players.add(new PlayerData(uuid, coralPlayer.getName(), false, opLevel, coralPlayer.getPlayTime()));
+            } else {
+                players.add(new PlayerData(uuid, null, false, opLevel, null));
+            }
         }
-        players.sort((p1, p2) -> p1.getRight() > p2.getRight() ? -1 :
-                (p1.getRight().equals(p2.getRight()) ? p1.getLeft().compareTo(p2.getLeft()) : 1));
+        Collections.sort(players);
 
         // 输出信息到聊天框
-        var playerText = Texts.join(players, Text.literal("\n"), p -> createPlayerText(p.getLeft(), p.getMiddle(), p.getRight()));
+        var playerText = Texts.join(players, Text.literal("\n"), p -> createPlayerText(p, true));
+        if (!players.isEmpty()) {
+            playerText = Text.literal(":\n").append(playerText);
+        }
         var text = Language.formatStyle("coral.command.player.listall", players.size(), playerText);
         source.sendFeedback(() -> text, false);
         return Command.SINGLE_SUCCESS;
     }
 
-    private static Text createPlayerText(String uuidStr, String name, int permissionLevel) {
-        var text = Text.empty();
-        if (name != null && !name.isEmpty()) {
-            text.append(name + " ");
+    private static Text createPlayerText(PlayerData player, boolean showStatus) {
+        // 默认展示玩家名称, 如果没有名称则展示 uuid
+        MutableText nameText;
+        String copyString;
+        if (player.name != null && !player.name.isEmpty()) {
+            nameText = Text.literal(player.name);
+            copyString = String.format("%s [%s]", player.name, player.uuid);
+        } else {
+            nameText = Texts.bracketed(Text.literal(player.uuid.toString())).formatted(Formatting.GRAY);
+            copyString = String.format("[%s]", player.uuid);
         }
-        if (permissionLevel > 0) {
-            text.append(Text.literal(String.format("(op:%d) ", permissionLevel)).formatted(Formatting.LIGHT_PURPLE));
+        nameText.styled(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, copyString))
+                .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.translatable("chat.copy.click"))));
+
+        // 添加在线状态和权限
+        MutableText statusText = null;
+        if (showStatus) {
+            if (player.online) {
+                statusText = Language.format("coral.command.player.listall.online");
+            } else {
+                statusText = Language.format("coral.command.player.listall.offline");
+                if (player.playTime != null) {
+                    statusText.append(Texts.DEFAULT_SEPARATOR)
+                            .append(Language.formatStyle("coral.command.player.listall.playtime", dateFormat.format(player.playTime)));
+                }
+            }
+            if (player.permissionLevel > 0) {
+                statusText.append(Texts.DEFAULT_SEPARATOR)
+                        .append(Language.formatStyle("coral.command.player.listall.operator", player.permissionLevel));
+                statusText.formatted(Formatting.LIGHT_PURPLE);
+            }
         }
-        text.append(Texts.bracketed(Text.literal(uuidStr)).formatted(Formatting.GRAY)
-                .styled(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, uuidStr))
-                        .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.translatable("chat.copy.click")))));
+
+        MutableText text = Text.empty();
+        text.append(player.online ? nameText : nameText.formatted(Formatting.GRAY));
+        if (showStatus) {
+            text.append(" ").append(player.online ? Texts.bracketed(statusText) :
+                    Texts.bracketed(statusText.formatted(Formatting.GRAY)).formatted(Formatting.GRAY));
+        }
         return text;
+    }
+
+    // 玩家数据
+    private record PlayerData(UUID uuid, String name, boolean online, int permissionLevel,
+                              Date playTime) implements Comparable<PlayerData> {
+        @Override
+        public int compareTo(@NotNull PlayerData obj) {
+            // 在线用户优先
+            if (online != obj.online) {
+                return online ? -1 : 1;
+            }
+            // 权限高的优先
+            if (permissionLevel != obj.permissionLevel) {
+                return -(permissionLevel - obj.permissionLevel);
+            }
+            // 游玩时间最新的优先, 如果不存在游玩时间记录则排在最后
+            if (playTime != null && obj.playTime != null) {
+                return -playTime.compareTo(obj.playTime);
+            } else if (playTime == null && obj.playTime == null) {
+                return 0;
+            }
+            return playTime != null ? -1 : 1;
+        }
     }
 }

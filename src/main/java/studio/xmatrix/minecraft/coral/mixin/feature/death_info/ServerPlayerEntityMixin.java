@@ -20,7 +20,7 @@ public abstract class ServerPlayerEntityMixin extends LivingEntity {
         super(entityType, world);
     }
 
-    @Inject(method = "onDeath", at = @At(value = "RETURN"))
+    @Inject(method = "onDeath", at = @At("RETURN"))
     private void onDeath(CallbackInfo ci) {
         // 广播死亡地址
         String coordinateText = String.format("[%d, %d, %d]", this.getBlockX(), this.getBlockY(), this.getBlockZ());
