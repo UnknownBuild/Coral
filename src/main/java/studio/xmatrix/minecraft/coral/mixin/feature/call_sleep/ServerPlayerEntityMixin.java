@@ -20,7 +20,7 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity {
         super(world, blockPos, yaw, gameProfile);
     }
 
-    @Inject(method = "sleep", at = @At(value = "RETURN"))
+    @Inject(method = "sleep", at = @At("RETURN"))
     private void sleep(CallbackInfo ci) {
         // 如果是单人游戏且非局域网模式, 不启用该功能
         var server = Objects.requireNonNull(this.getServer());

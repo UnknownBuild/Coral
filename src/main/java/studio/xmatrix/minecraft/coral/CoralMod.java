@@ -1,7 +1,7 @@
 package studio.xmatrix.minecraft.coral;
 
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import studio.xmatrix.minecraft.coral.command.CommandCallback;
 import studio.xmatrix.minecraft.coral.command.HereCommand;
 import studio.xmatrix.minecraft.coral.command.PlayerCommand;
 import studio.xmatrix.minecraft.coral.command.WRUCommand;
@@ -18,7 +18,7 @@ public class CoralMod implements ModInitializer {
         Style.init();
 
         // 注册命令
-        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
+        CommandCallback.init(dispatcher -> {
             HereCommand.register(dispatcher);
             PlayerCommand.register(dispatcher);
             WRUCommand.register(dispatcher);

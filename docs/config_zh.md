@@ -1,6 +1,7 @@
 # Coral 配置指南
 
-Coral 的配置文件使用 Java Properties 配置约定编写，如果你不了解 Properties，下面我们也对此做了一些说明。Minecraft 服务器的配置文件也是采用 Properties 文件。
+Coral 的配置文件使用 Java Properties 配置约定编写，如果你不了解 Properties，下面我们也对此做了一些说明。Minecraft
+服务器的配置文件也是采用 Properties 文件。
 
 ## 关于配置文件
 
@@ -53,10 +54,10 @@ language=zh_cn
 
 目前 Coral 支持简体中文和英文，默认为简体中文。
 
-|   语言   |  代码   |
-| :------: |:-----:|
+|  语言  |  代码   |
+|:----:|:-----:|
 | 简体中文 | zh_cn |
-|   英文   | en_us |
+|  英文  | en_us |
 
 如果您对语言的支持不满意，可以自定义编写语言文件。
 
@@ -65,7 +66,9 @@ language=zh_cn
 language.path=config/lang.json
 ```
 
-以上配置将优先从 config/lang.json 读取文本信息，如果该文件中不存在，再根据 language 字段读取简体中文默认文本。Coral的预设语言文件在 [源码](https://github.com/UnknownBuild/Coral/tree/master/src/main/resources/assets/coral/lang) 中可查看。
+以上配置将优先从 config/lang.json 读取文本信息，如果该文件中不存在，再根据 language
+字段读取简体中文默认文本。Coral的预设语言文件在 [源码](https://github.com/UnknownBuild/Coral/tree/master/src/main/resources/assets/coral/lang)
+中可查看。
 
 Coral 针对不同语言使用了同一套样式方案，如果您对样式的支持不满意，可以自定义编写样式文件。
 
@@ -73,7 +76,9 @@ Coral 针对不同语言使用了同一套样式方案，如果您对样式的�
 style.path=config/style.json
 ```
 
-Coral 的预设样式文件在 [源码](https://github.com/UnknownBuild/Coral/tree/master/src/main/resources/assets/coral/style.json) 中可以查看。
+Coral
+的预设样式文件在 [源码](https://github.com/UnknownBuild/Coral/tree/master/src/main/resources/assets/coral/style.json)
+中可以查看。
 
 ## 命令支持
 
@@ -87,14 +92,16 @@ Coral 的预设样式文件在 [源码](https://github.com/UnknownBuild/Coral/tr
 
 该命令仅在专用服务器或单人游戏局域网模式下生效，不支持单人游戏。
 
-| 配置项 | 类型 | 默认值 | 说明        |
-|--|--|--|--|
-| command.here | 布尔值 | true | 是否启用该命令   |
-| command.here.duration | 整型 | 30 | 发光效果时长(秒) |
+| 配置项                   | 类型  | 默认值  | 说明        |
+|-----------------------|-----|------|-----------|
+| command.here          | 布尔值 | true | 是否启用该命令   |
+| command.here.duration | 整型  | 30   | 发光效果时长(秒) |
 
 ### player
 
 玩家命令增强。提供更丰富的查询功能。
+
+启用该功能后，服务器将在 world/data 下创建文件 coral_player.data，该文件用于存储玩家在线信息，仅用于辅助玩家信息查询，即使被删除也不影响服务器游玩。
 
 ```
 /player list       # 列举当前在线玩家名单, 等同于 /list uuids, 但支持点击复制 uuid
@@ -103,9 +110,9 @@ Coral 的预设样式文件在 [源码](https://github.com/UnknownBuild/Coral/tr
 
 listall 命令要求执行玩家拥有等级 3 及以上权限。
 
-| 配置项            | 类型 | 默认值 | 说明        |
-|----------------|--|--|--|
-| command.player | 布尔值 | true | 是否启用该命令   |
+| 配置项            | 类型  | 默认值  | 说明      |
+|----------------|-----|------|---------|
+| command.player | 布尔值 | true | 是否启用该命令 |
 
 ### wru
 
@@ -117,9 +124,9 @@ listall 命令要求执行玩家拥有等级 3 及以上权限。
 
 该命令仅在专用服务器或单人游戏局域网模式下生效，不支持单人游戏。
 
-| 配置项                   | 类型 | 默认值 | 说明        |
-|-----------------------|--|--|--|
-| command.wru           | 布尔值 | true | 是否启用该命令   |
+| 配置项         | 类型  | 默认值  | 说明      |
+|-------------|-----|------|---------|
+| command.wru | 布尔值 | true | 是否启用该命令 |
 
 ## 特性支持
 
@@ -129,8 +136,8 @@ listall 命令要求执行玩家拥有等级 3 及以上权限。
 
 该命令仅在专用服务器或单人游戏局域网模式下生效，不支持单人游戏。
 
-| 配置项                | 类型 | 默认值 | 说明      |
-|--------------------|--|--|---------|
+| 配置项                | 类型  | 默认值  | 说明      |
+|--------------------|-----|------|---------|
 | feature.call_sleep | 布尔值 | true | 是否启用该特性 |
 
 ### death_info
@@ -139,6 +146,6 @@ listall 命令要求执行玩家拥有等级 3 及以上权限。
 
 该命令在所有模式中均生效。
 
-| 配置项                | 类型 | 默认值 | 说明      |
-|--------------------|--|--|---------|
+| 配置项                | 类型  | 默认值  | 说明      |
+|--------------------|-----|------|---------|
 | feature.death_info | 布尔值 | true | 是否启用该特性 |

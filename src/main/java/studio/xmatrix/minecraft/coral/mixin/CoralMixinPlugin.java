@@ -43,6 +43,9 @@ public class CoralMixinPlugin implements IMixinConfigPlugin {
         String configName = mixinClassName.substring(start, end);
 
         // 判断功能是否启用
+        if (configName.equals("base")) {
+            return true; // 基础 Mixin, 默认启用
+        }
         return Config.getBoolean(configName);
     }
 
