@@ -1,7 +1,8 @@
 # Coral 配置指南
 
-Coral 的配置文件使用 Java Properties 配置约定编写，如果你不了解 Properties，下面我们也对此做了一些说明。Minecraft
-服务器的配置文件也是采用 Properties 文件。
+[English](config.md) | 中文
+
+Coral 的配置文件使用 Java Properties 配置约定编写，如果你不了解 Properties，下面我们也对此做了一些说明。Minecraft 服务器的配置文件也是采用 Properties 文件。
 
 ## 关于配置文件
 
@@ -52,7 +53,7 @@ Coral 大多数功能需要向玩家们显示文本信息，通过配置文件�
 language=zh_cn
 ```
 
-目前 Coral 支持简体中文和英文，默认为简体中文。
+目前 Coral 支持简体中文和英文，默认为英文。
 
 |  语言  |  代码   |
 |:----:|:-----:|
@@ -66,9 +67,7 @@ language=zh_cn
 language.path=config/lang.json
 ```
 
-以上配置将优先从 config/lang.json 读取文本信息，如果该文件中不存在，再根据 language
-字段读取简体中文默认文本。Coral的预设语言文件在 [源码](https://github.com/UnknownBuild/Coral/tree/master/src/main/resources/assets/coral/lang)
-中可查看。
+以上配置将优先从 config/lang.json 读取文本信息，如果该文件中不存在，再根据 language 字段读取默认文本。Coral的预设语言文件在 [源码](https://github.com/UnknownBuild/Coral/tree/master/src/main/resources/assets/coral/lang) 中可查看。
 
 Coral 针对不同语言使用了同一套样式方案，如果您对样式的支持不满意，可以自定义编写样式文件。
 
@@ -76,9 +75,7 @@ Coral 针对不同语言使用了同一套样式方案，如果您对样式的�
 style.path=config/style.json
 ```
 
-Coral
-的预设样式文件在 [源码](https://github.com/UnknownBuild/Coral/tree/master/src/main/resources/assets/coral/style.json)
-中可以查看。
+Coral 的预设样式文件在 [源码](https://github.com/UnknownBuild/Coral/tree/master/src/main/resources/assets/coral/style.json) 中可以查看。
 
 ## 命令支持
 
