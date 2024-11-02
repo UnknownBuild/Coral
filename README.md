@@ -28,12 +28,13 @@ Please read [https://fabricmc.net/use/](https://fabricmc.net/use/), install Fabr
 
 The followings are the latest versions and maintenance status of Coral for various Minecraft version. For more versions, please visit [Release](https://github.com/UnknownBuild/Coral/releases/) and download.
 
-| Minecraft Version |                             Coral Latest Version                          |  Status  |
-|:------------:|:-------------------------------------------------------------------:|:----:|
-|    1.21.x    | [v0.3.0](https://github.com/UnknownBuild/Coral/releases/tag/v0.3.0) | Under maintained |
-| 1.20.x and lower versions |  [v0.2.2](https://github.com/UnknownBuild/Coral/releases/tag/v0.x)  | No Longer Maintained |
+| Minecraft Version | Coral Latest Version | Status |
+|:--:|:--:|:--:|
+| 1.22.x | v0.3.1 | Developing | 
+| 1.21.x | [v0.3.0](https://github.com/UnknownBuild/Coral/releases/tag/v0.3.0) | Under Maintained |
+| 1.20.x and lower versions | [v0.2.2](https://github.com/UnknownBuild/Coral/releases/tag/v0.x) | No Longer Maintained |
 
-Coral can enable or disable specific features through config file. For the information on Coral configuration, please refer to [Coral配置指南](https://github.com/UnknownBuild/Coral/blob/master/docs/config.md).
+Coral can enable or disable specific features through config file. For the information on Coral configuration, please refer to [Coral Configuration Guides](https://github.com/UnknownBuild/Coral/blob/master/docs/config.md).
 
 ## Questions and suggestions
 
