@@ -4,7 +4,10 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.text.*;
+import net.minecraft.text.ClickEvent;
+import net.minecraft.text.HoverEvent;
+import net.minecraft.text.Text;
+import net.minecraft.text.Texts;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.WorldSavePath;
 import org.apache.commons.lang3.tuple.Triple;
@@ -97,8 +100,8 @@ public class PlayerCommand {
             text.append(Text.literal(String.format("(op:%d) ", permissionLevel)).formatted(Formatting.LIGHT_PURPLE));
         }
         text.append(Texts.bracketed(Text.literal(uuidStr)).formatted(Formatting.GRAY)
-                .styled(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, uuidStr))
-                        .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.translatable("chat.copy.click")))));
+                .styled(style -> style.withClickEvent(new ClickEvent.CopyToClipboard(uuidStr))
+                        .withHoverEvent(new HoverEvent.ShowText(Text.translatable("chat.copy.click")))));
         return text;
     }
 }
