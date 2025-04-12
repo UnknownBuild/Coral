@@ -117,8 +117,8 @@ public class PlayerCommand {
             nameText = Texts.bracketed(Text.literal(player.uuid.toString())).formatted(Formatting.GRAY);
             copyString = String.format("[%s]", player.uuid);
         }
-        nameText.styled(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, copyString))
-                .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.translatable("chat.copy.click"))));
+        nameText.styled(style -> style.withClickEvent(new ClickEvent.CopyToClipboard(copyString))
+                .withHoverEvent(new HoverEvent.ShowText(Text.translatable("chat.copy.click"))));
 
         // 添加在线状态和权限
         MutableText statusText = null;
