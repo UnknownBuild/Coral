@@ -1,8 +1,8 @@
 package studio.xmatrix.minecraft.coral.command;
 
-import com.mojang.authlib.GameProfile;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
+import net.minecraft.server.PlayerConfigEntry;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.*;
@@ -43,7 +43,7 @@ public class PlayerCommand {
         // 输出当前在线玩家列表
         var players = source.getServer().getPlayerManager().getPlayerList();
         var playerText = Texts.join(players, Text.literal("\n"), p ->
-                createPlayerText(new PlayerData(p.getUuid(), p.getGameProfile().getName(), true, 0, null), false));
+                createPlayerText(new PlayerData(p.getUuid(), p.getGameProfile().name(), true, 0, null), false));
         if (!players.isEmpty()) {
             playerText = Text.literal(":\n").append(playerText);
         }
@@ -62,9 +62,9 @@ public class PlayerCommand {
 
         // 获取服务器在线玩家列表
         for (var p : source.getServer().getPlayerManager().getPlayerList()) {
-            var op = opList.get(p.getGameProfile());
+            var op = opList.get(p.getPlayerConfigEntry());
             var opLevel = op != null ? op.getPermissionLevel() : 0;
-            players.add(new PlayerData(p.getUuid(), p.getGameProfile().getName(), true, opLevel, null));
+            players.add(new PlayerData(p.getUuid(), p.getGameProfile().name(), true, opLevel, null));
             playerMap.add(p.getUuid());
         }
 
@@ -85,7 +85,7 @@ public class PlayerCommand {
             playerMap.add(uuid);
 
             // 获取用户信息
-            var op = opList.get(new GameProfile(uuid, ""));
+            var op = opList.get(new PlayerConfigEntry(uuid, ""));
             var opLevel = op != null ? op.getPermissionLevel() : 0;
             var coralPlayer = coralPlayers.get(uuid);
             if (coralPlayer != null) {

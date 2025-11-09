@@ -78,7 +78,7 @@ public class CoralPlayerState extends PersistentState {
     // 更新玩家信息
     public void updatePlayer(ServerPlayerEntity serverPlayer) {
         var player = players.computeIfAbsent(serverPlayer.getUuid(), uuid -> new CoralPlayer());
-        player.setName(serverPlayer.getGameProfile().getName());
+        player.setName(serverPlayer.getGameProfile().name());
         player.setPlayTime(new Date());
         markDirty(); // 标记数据已更新
     }
