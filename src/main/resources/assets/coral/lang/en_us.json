@@ -1,13 +1,17 @@
 {
   "coral.command.here": "%1$s says hello in the %2$s %3$s",
   "coral.command.here.feedback": "You will be highlighted for %1$s seconds",
-  "coral.command.player.list": "There are %1$s players online:\n%2$s",
-  "coral.command.player.listall": "There are total %1$s players in server:\n%2$s",
+  "coral.command.player.list": "There are %1$s players online%2$s",
+  "coral.command.player.listall": "There are total %1$s players in server%2$s",
+  "coral.command.player.listall.offline": "Offline",
+  "coral.command.player.listall.online": "Online",
+  "coral.command.player.listall.operator": "Operator(%1$s)",
+  "coral.command.player.listall.playtime": "LastPlay:%1$s",
   "coral.command.wru": "%1$s is asking %2$s's location",
   "coral.command.wru.err_self": "cannot ask yourself",
   "coral.dimension.end": "End",
   "coral.dimension.nether": "Nether",
-  "coral.dimension.over_world":  "OverWorld",
+  "coral.dimension.over_world": "OverWorld",
   "coral.feature.call_sleep": "%1$s calls you to sleep",
   "coral.feature.death_info": "%1$s died in %2$s %3$s"
 }

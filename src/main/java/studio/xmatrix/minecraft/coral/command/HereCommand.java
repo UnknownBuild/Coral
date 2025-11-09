@@ -38,7 +38,7 @@ public class HereCommand {
         // 广播信息到聊天框
         String coordinateText = String.format("[%d, %d, %d]", player.getBlockX(), player.getBlockY(), player.getBlockZ());
         MutableText text = Language.formatStyle("coral.command.here", player.getDisplayName(),
-                Dimension.getStyleText(player.getWorld().getRegistryKey()), coordinateText);
+                Dimension.getStyleText(player.getEntityWorld().getRegistryKey()), coordinateText);
         source.getServer().getPlayerManager().broadcast(text, false);
         source.sendFeedback(() -> Language.formatStyle("coral.command.here.feedback", duration), false);
 
