@@ -33,7 +33,9 @@ public class PlayerCommand {
         // 注册命令
         dispatcher.register(CommandManager.literal("player")
                 .then(CommandManager.literal("list").executes(c -> executeList(c.getSource())))
-                .then(CommandManager.literal("listall").requires(s -> s.hasPermissionLevel(3)).executes(c -> executeListAll(c.getSource()))));
+                .then(CommandManager.literal("listall")
+                        .requires(CommandManager.requirePermissionLevel(CommandManager.ADMINS_CHECK))
+                        .executes(c -> executeListAll(c.getSource()))));
     }
 
     /**
@@ -63,7 +65,7 @@ public class PlayerCommand {
         // 获取服务器在线玩家列表
         for (var p : source.getServer().getPlayerManager().getPlayerList()) {
             var op = opList.get(p.getPlayerConfigEntry());
-            var opLevel = op != null ? op.getPermissionLevel() : 0;
+            var opLevel = op != null ? op.getLevel().getLevel().getLevel() : 0;
             players.add(new PlayerData(p.getUuid(), p.getGameProfile().name(), true, opLevel, null));
             playerMap.add(p.getUuid());
         }
@@ -86,7 +88,7 @@ public class PlayerCommand {
 
             // 获取用户信息
             var op = opList.get(new PlayerConfigEntry(uuid, ""));
-            var opLevel = op != null ? op.getPermissionLevel() : 0;
+            var opLevel = op != null ? op.getLevel().getLevel().getLevel() : 0;
             var coralPlayer = coralPlayers.get(uuid);
             if (coralPlayer != null) {
                 players.add(new PlayerData(uuid, coralPlayer.getName(), false, opLevel, coralPlayer.getPlayTime()));

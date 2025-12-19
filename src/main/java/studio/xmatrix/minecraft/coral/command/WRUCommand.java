@@ -25,7 +25,7 @@ public class WRUCommand {
 
         // 注册命令, 要求指定一个玩家, 要求当前服务器为多人服务器才生效
         dispatcher.register(CommandManager.literal("wru")
-                .requires(s -> s.getServer().isRemote())
+                .requires(s -> s.getServer() != null && s.getServer().isRemote())
                 .then(CommandManager.argument("player", EntityArgumentType.player())
                         .executes(c -> executeWRU(c.getSource(), EntityArgumentType.getPlayer(c, "player")))));
     }

@@ -26,7 +26,7 @@ public class HereCommand {
         // 注册命令, 要求当前服务器为多人服务器才生效
         duration = Config.getInt("command.here.duration");
         dispatcher.register(CommandManager.literal("here")
-                .requires(s -> s.getServer().isRemote())
+                .requires(s -> s.getServer() != null && s.getServer().isRemote())
                 .executes(c -> executeHere(c.getSource())));
     }
 
