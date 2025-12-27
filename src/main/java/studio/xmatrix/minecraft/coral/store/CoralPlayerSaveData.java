@@ -2,40 +2,40 @@ package studio.xmatrix.minecraft.coral.store;
 
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.*;
-import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.world.PersistentState;
-import net.minecraft.world.PersistentStateType;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.saveddata.SavedData;
+import net.minecraft.world.level.saveddata.SavedDataType;
 
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class CoralPlayerState extends PersistentState {
+public class CoralPlayerSaveData extends SavedData {
     private static final String KEY = "coral_player";
-    private static final Codec<CoralPlayerState> CODEC = Codec.of(new Encoder<>() {
+    private static final Codec<CoralPlayerSaveData> CODEC = Codec.of(new Encoder<>() {
         @Override
-        public <T> DataResult<T> encode(CoralPlayerState state, DynamicOps<T> ops, T prefix) {
+        public <T> DataResult<T> encode(CoralPlayerSaveData state, DynamicOps<T> ops, T prefix) {
             //noinspection unchecked
             return DataResult.success((T) state.toNbt());
         }
     }, new Decoder<>() {
         @Override
-        public <T> DataResult<Pair<CoralPlayerState, T>> decode(DynamicOps<T> ops, T input) {
-            var nbt = (NbtCompound) ops.convertTo(NbtOps.INSTANCE, input);
+        public <T> DataResult<Pair<CoralPlayerSaveData, T>> decode(DynamicOps<T> ops, T input) {
+            var nbt = (CompoundTag) ops.convertTo(NbtOps.INSTANCE, input);
             return DataResult.success(Pair.of(fromNbt(nbt), ops.empty()));
         }
     });
     private final HashMap<UUID, CoralPlayer> players = new HashMap<>();
 
-    private static CoralPlayerState fromNbt(NbtCompound nbt) {
-        var state = new CoralPlayerState();
+    private static CoralPlayerSaveData fromNbt(CompoundTag nbt) {
+        var state = new CoralPlayerSaveData();
         var playersNbtOp = nbt.getCompound("players");
         playersNbtOp.ifPresent(playersNbt -> {
-            playersNbt.getKeys().forEach(key -> {
+            playersNbt.keySet().forEach(key -> {
                 var playerNbtOp = playersNbt.getCompound(key);
                 if (playerNbtOp.isEmpty()) {
                     return;
@@ -52,17 +52,17 @@ public class CoralPlayerState extends PersistentState {
         return state;
     }
 
-    public static CoralPlayerState fromServer(MinecraftServer server) {
-        var persistentStateManager = server.getOverworld().getPersistentStateManager();
-        var type = new PersistentStateType<>(KEY, CoralPlayerState::new, CoralPlayerState.CODEC, null);
-        return persistentStateManager.getOrCreate(type);
+    public static CoralPlayerSaveData fromServer(MinecraftServer server) {
+        var dataStorage = server.overworld().getDataStorage();
+        var type = new SavedDataType<>(KEY, CoralPlayerSaveData::new, CoralPlayerSaveData.CODEC, null);
+        return dataStorage.get(type);
     }
 
-    public NbtCompound toNbt() {
-        var nbt = new NbtCompound();
-        var playersNbt = new NbtCompound();
+    public CompoundTag toNbt() {
+        var nbt = new CompoundTag();
+        var playersNbt = new CompoundTag();
         players.forEach((uuid, player) -> {
-            var playerNbt = new NbtCompound();
+            var playerNbt = new CompoundTag();
             playerNbt.putString("name", player.getName());
             playerNbt.putLong("play_time", player.getPlayTime().getTime());
             playersNbt.put(uuid.toString(), playerNbt);
@@ -76,10 +76,10 @@ public class CoralPlayerState extends PersistentState {
     }
 
     // 更新玩家信息
-    public void updatePlayer(ServerPlayerEntity serverPlayer) {
-        var player = players.computeIfAbsent(serverPlayer.getUuid(), uuid -> new CoralPlayer());
+    public void updatePlayer(ServerPlayer serverPlayer) {
+        var player = players.computeIfAbsent(serverPlayer.getUUID(), uuid -> new CoralPlayer());
         player.setName(serverPlayer.getGameProfile().name());
         player.setPlayTime(new Date());
-        markDirty(); // 标记数据已更新
+        setDirty(); // 标记数据已更新
     }
 }

@@ -4,12 +4,12 @@
   "compatibilityLevel": "JAVA_21",
   "plugin": "studio.xmatrix.minecraft.coral.mixin.CoralMixinPlugin",
   "mixins": [
-    "base.CommandManagerMixin",
-    "base.PersistentStateManagerMixin",
+    "base.CommandsMixin",
+    "base.DimensionDataStorageMixin",
     "command.player.MinecraftServerAccessor",
-    "command.player.PlayerManagerMixin",
-    "feature.call_sleep.ServerPlayerEntityMixin",
-    "feature.death_info.ServerPlayerEntityMixin"
+    "command.player.PlayerListMixin",
+    "feature.call_sleep.ServerPlayerMixin",
+    "feature.death_info.ServerPlayerMixin"
   ],
   "client": [
   ],

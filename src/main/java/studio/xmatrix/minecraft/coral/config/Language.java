@@ -1,8 +1,8 @@
 package studio.xmatrix.minecraft.coral.config;
 
 import com.google.gson.reflect.TypeToken;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import org.apache.logging.log4j.Logger;
 import studio.xmatrix.minecraft.coral.util.FileUtil;
 import studio.xmatrix.minecraft.coral.util.LogUtil;
@@ -51,20 +51,20 @@ public class Language {
     /**
      * 翻译文本
      */
-    public static MutableText format(String key) {
-        return Text.literal(lang.getOrDefault(key, key));
+    public static MutableComponent format(String key) {
+        return Component.literal(lang.getOrDefault(key, key));
     }
 
     /**
      * 翻译文本, 并携带样式
      */
-    public static MutableText formatStyle(String key, Object... args) {
+    public static MutableComponent formatStyle(String key, Object... args) {
         if (!lang.containsKey(key)) {
-            return Text.literal(key);
+            return Component.literal(key);
         }
 
         String value = lang.get(key);
-        MutableText text = Text.empty();
+        MutableComponent text = Component.empty();
         Matcher matcher = ARG_FORMAT.matcher(value);
         int start = 0, matchEnd;
         for (int i = 0; matcher.find(start); start = matchEnd) {
@@ -72,7 +72,7 @@ public class Language {
             matchEnd = matcher.end();
 
             if (matchStart > start) {
-                text.append(Style.format(Text.literal(value.substring(start, matchStart)), key));
+                text.append(Style.format(Component.literal(value.substring(start, matchStart)), key));
             }
 
             String matchString = value.substring(matchStart, matchEnd);
@@ -91,18 +91,18 @@ public class Language {
         }
 
         if (start < value.length()) {
-            text.append(Style.format(Text.literal(value.substring(start)), key));
+            text.append(Style.format(Component.literal(value.substring(start)), key));
         }
         return text;
     }
 
-    private static MutableText convertArgToText(Object obj) {
-        if (obj instanceof Text) {
-            return (MutableText) obj;
+    private static MutableComponent convertArgToText(Object obj) {
+        if (obj instanceof Component) {
+            return (MutableComponent) obj;
         } else if (obj == null) {
-            return Text.literal("null");
+            return Component.literal("null");
         } else {
-            return Text.literal(obj.toString());
+            return Component.literal(obj.toString());
         }
     }
 }

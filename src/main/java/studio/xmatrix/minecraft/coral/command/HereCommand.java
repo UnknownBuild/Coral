@@ -3,11 +3,11 @@ package studio.xmatrix.minecraft.coral.command;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.server.command.CommandManager;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.text.MutableText;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import studio.xmatrix.minecraft.coral.config.Config;
 import studio.xmatrix.minecraft.coral.config.Language;
 import studio.xmatrix.minecraft.coral.consts.Dimension;
@@ -18,29 +18,29 @@ import studio.xmatrix.minecraft.coral.consts.Dimension;
 public class HereCommand {
     private static int duration; // 高亮特效的持续时间, 单位秒
 
-    public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
+    public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         if (!Config.getBoolean("command.here")) {
             return;
         }
 
         // 注册命令, 要求当前服务器为多人服务器才生效
         duration = Config.getInt("command.here.duration");
-        dispatcher.register(CommandManager.literal("here")
-                .requires(s -> s.getServer() != null && s.getServer().isRemote())
+        dispatcher.register(Commands.literal("here")
+                .requires(s -> s.getServer() != null && s.getServer().isPublished())
                 .executes(c -> executeHere(c.getSource())));
     }
 
-    private static int executeHere(ServerCommandSource source) throws CommandSyntaxException {
+    private static int executeHere(CommandSourceStack source) throws CommandSyntaxException {
         // 给执行命令的玩家赋予高亮特效
-        var player = source.getPlayerOrThrow();
-        player.addStatusEffect(new StatusEffectInstance(StatusEffects.GLOWING, duration * 20));
+        var player = source.getPlayerOrException();
+        player.addEffect(new MobEffectInstance(MobEffects.GLOWING, duration * 20));
 
         // 广播信息到聊天框
         String coordinateText = String.format("[%d, %d, %d]", player.getBlockX(), player.getBlockY(), player.getBlockZ());
-        MutableText text = Language.formatStyle("coral.command.here", player.getDisplayName(),
-                Dimension.getStyleText(player.getEntityWorld().getRegistryKey()), coordinateText);
-        source.getServer().getPlayerManager().broadcast(text, false);
-        source.sendFeedback(() -> Language.formatStyle("coral.command.here.feedback", duration), false);
+        MutableComponent text = Language.formatStyle("coral.command.here", player.getDisplayName(),
+                Dimension.getStyleText(player.level().dimension()), coordinateText);
+        source.getServer().getPlayerList().broadcastSystemMessage(text, false);
+        source.sendSuccess(() -> Language.formatStyle("coral.command.here.feedback", duration), false);
 
         return Command.SINGLE_SUCCESS;
     }

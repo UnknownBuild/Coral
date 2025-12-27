@@ -1,7 +1,7 @@
 package studio.xmatrix.minecraft.coral.command;
 
 import com.mojang.brigadier.CommandDispatcher;
-import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.commands.CommandSourceStack;
 
 public class CommandCallback {
     private static Event callback;
@@ -10,11 +10,11 @@ public class CommandCallback {
         CommandCallback.callback = callback;
     }
 
-    public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
+    public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         callback.apply(dispatcher);
     }
 
     public interface Event {
-        void apply(CommandDispatcher<ServerCommandSource> dispatcher);
+        void apply(CommandDispatcher<CommandSourceStack> dispatcher);
     }
 }

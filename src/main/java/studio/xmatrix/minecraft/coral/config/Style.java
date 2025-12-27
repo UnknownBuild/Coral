@@ -1,8 +1,8 @@
 package studio.xmatrix.minecraft.coral.config;
 
 import com.google.gson.reflect.TypeToken;
-import net.minecraft.text.MutableText;
-import net.minecraft.util.Formatting;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.MutableComponent;
 import org.apache.logging.log4j.Logger;
 import studio.xmatrix.minecraft.coral.util.FileUtil;
 import studio.xmatrix.minecraft.coral.util.LogUtil;
@@ -44,19 +44,19 @@ public class Style {
         }
     }
 
-    public static MutableText format(MutableText text, String key) {
-        var formatting = Formatting.byName(style.get(key));
-        if (formatting == null || Formatting.WHITE.equals(formatting)) {
+    public static MutableComponent format(MutableComponent text, String key) {
+        var formatting = ChatFormatting.getByName(style.get(key));
+        if (formatting == null || ChatFormatting.WHITE.equals(formatting)) {
             return text;
         }
-        return text.formatted(formatting);
+        return text.withStyle(formatting);
     }
 
-    public static MutableText format(MutableText text, String key, int index) {
-        var formatting = Formatting.byName(style.get(String.format("%s.$%d", key, index)));
-        if (formatting == null || Formatting.WHITE.equals(formatting)) {
+    public static MutableComponent format(MutableComponent text, String key, int index) {
+        var formatting = ChatFormatting.getByName(style.get(String.format("%s.$%d", key, index)));
+        if (formatting == null || ChatFormatting.WHITE.equals(formatting)) {
             return text;
         }
-        return text.formatted(formatting);
+        return text.withStyle(formatting);
     }
 }
