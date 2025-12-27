@@ -28,7 +28,8 @@ Coral 模组的工作依赖于 Fabric。
 
 | Minecraft 版本 | Coral 最新版本 | 状态 |
 |:--:|:--:|:--:|
-| 1.21.9+ | [v0.4.0](https://github.com/UnknownBuild/Coral/releases/tag/v0.4.0) | 维护中 |
+| 26+ | [v0.4.1](https://github.com/UnknownBuild/Coral/releases/tag/v0.4.1) | 维护中 |
+| 1.21.9 ~ 1.21.11 | [v0.4.0](https://github.com/UnknownBuild/Coral/releases/tag/v0.4.0) | 不再维护 |
 | 1.21 ~ 1.21.8 | [v0.3.0](https://github.com/UnknownBuild/Coral/releases/tag/v0.3.0) | 不再维护 |
 | 1.20.x 及更低版本 | [v0.2.2](https://github.com/UnknownBuild/Coral/releases/tag/v0.x) | 不再维护 |
 

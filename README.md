@@ -30,7 +30,8 @@ The followings are the latest versions and maintenance status of Coral for vario
 
 | Minecraft Version | Coral Latest Version | Status |
 |:--:|:--:|:--:|
-| 1.21.9+ | [v0.4.0](https://github.com/UnknownBuild/Coral/releases/tag/v0.4.0) | Under Maintained | 
+| 26+ | [v0.4.1](https://github.com/UnknownBuild/Coral/releases/tag/v0.4.1) | Under Maintained |
+| 1.21.9 ~ 1.21.11 | [v0.4.0](https://github.com/UnknownBuild/Coral/releases/tag/v0.4.0) | No Longer Maintained |
 | 1.21 ~ 1.21.8 | [v0.3.0](https://github.com/UnknownBuild/Coral/releases/tag/v0.3.0) | No Longer Maintained |
 | 1.20.x and lower versions | [v0.2.2](https://github.com/UnknownBuild/Coral/releases/tag/v0.x) | No Longer Maintained |
 
