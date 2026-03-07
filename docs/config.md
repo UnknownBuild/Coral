@@ -100,7 +100,7 @@ This command only works on dedicated server or LAN mode, not support for single 
 
 Enhances player command, provides richer querying features.
 
-After enables this feature, the server will create file coral_player.data in folder world/data. This file is used to store player online information and is only used to query command. Even if the file is deleted, it will not affect gaming.
+After enables this feature, the server will create file coral/coral_player.data in folder world/data. This file is used to store player online information and is only used to query command. Even if the file is deleted, it will not affect gaming.
 
 ```
 /player list       # List current online players, same as /list uuids, but supports clicks to copy uuid

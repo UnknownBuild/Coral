@@ -98,7 +98,7 @@ Coral 的预设样式文件在 [源码](https://github.com/UnknownBuild/Coral/tr
 
 玩家命令增强。提供更丰富的查询功能。
 
-启用该功能后，服务器将在 world/data 下创建文件 coral_player.data，该文件用于存储玩家在线信息，仅用于辅助玩家信息查询，即使被删除也不影响服务器游玩。
+启用该功能后，服务器将在 world/data 下创建文件 coral/coral_player.data，该文件用于存储玩家在线信息，仅用于辅助玩家信息查询，即使被删除也不影响服务器游玩。
 
 ```
 /player list       # 列举当前在线玩家名单, 等同于 /list uuids, 但支持点击复制 uuid

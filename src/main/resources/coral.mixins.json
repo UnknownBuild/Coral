@@ -5,7 +5,7 @@
   "plugin": "studio.xmatrix.minecraft.coral.mixin.CoralMixinPlugin",
   "mixins": [
     "base.CommandsMixin",
-    "base.DimensionDataStorageMixin",
+    "base.SavedDataStorageMixin",
     "command.player.MinecraftServerAccessor",
     "command.player.PlayerListMixin",
     "feature.call_sleep.ServerPlayerMixin",

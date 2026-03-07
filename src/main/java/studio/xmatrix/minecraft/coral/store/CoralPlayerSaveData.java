@@ -53,9 +53,9 @@ public class CoralPlayerSaveData extends SavedData {
     }
 
     public static CoralPlayerSaveData fromServer(MinecraftServer server) {
-        var dataStorage = server.overworld().getDataStorage();
-        var type = new SavedDataType<>(KEY, CoralPlayerSaveData::new, CoralPlayerSaveData.CODEC, null);
-        return dataStorage.get(type);
+        var dataStorage = server.getDataStorage();
+        var type = new SavedDataType<>(SaveData.Id(KEY), CoralPlayerSaveData::new, CoralPlayerSaveData.CODEC, null);
+        return dataStorage.computeIfAbsent(type);
     }
 
     public CompoundTag toNbt() {
